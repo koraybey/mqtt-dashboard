@@ -50,6 +50,7 @@ export const MqttControl = ({
                     right: 0,
                     bottom: 0,
                     left: 0,
+                    pointerEvents: 'none',
                 }}
             >
                 <h3>{name}</h3>
