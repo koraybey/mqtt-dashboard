@@ -1,0 +1,9 @@
+{
+    "zigbee2mqtt/0_light_studio": { "name": "Studio Light", "type": "switch" },
+    "zigbee2mqtt/0_plug_studio": { "name": "Studio Plug", "type": "plug" },
+    "zigbee2mqtt/0_contact_balcony": {
+        "name": "Balcony Contact",
+        "type": "sensor"
+    },
+    "zigbee2mqtt/0_contact_door": { "name": "Door Contact", "type": "sensor" }
+}

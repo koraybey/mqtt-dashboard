@@ -1,0 +1,20 @@
+{
+  "name": "server",
+  "version": "0.0.1",
+	"private": true,
+  "type": "module",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.3",
+    "nodemon": "^3.1.0"
+  },
+  "devDependencies": {
+		"@faker-js/faker": "^8.4.1",
+		"fs": "^0.0.1-security"
+  },
+  "scripts": {
+    "dev": "nodemon index.js",
+    "generateJsonFromLog": "node helpers/mqttLogToJson.js",
+    "generateJsonMock": "node helpers/generateMockData.js"
+  }
+}
