@@ -14,7 +14,7 @@ export const MqttLogs = () => {
         <div
             style={{
                 height: '100%',
-                overflow: 'scroll',
+                overflow: 'auto',
                 padding: 8,
             }}
         >
