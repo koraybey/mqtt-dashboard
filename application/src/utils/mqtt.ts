@@ -9,7 +9,7 @@ import { createJSONStorage, devtools, persist } from 'zustand/middleware'
 import type { ParsedMessage } from '@/types/exposes'
 
 const client = new Paho.Client(
-    '10.147.17.93', // Overlay network IP
+    'dashboard.perseus.digital', // Overlay network IP
     Number(1881),
     'mqttjs_client_dashboard'
 )
