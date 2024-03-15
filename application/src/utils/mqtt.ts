@@ -11,7 +11,7 @@ import type { ParsedMessage } from '@/types/exposes'
 const client = new Paho.Client(
     'dashboard.perseus.digital', // Overlay network IP
     Number(1881),
-    'mqttjs_client_dashboard'
+    `mqttjs_${Math.random().toString(16).slice(2, 10)}`
 )
 
 client.onConnectionLost = onConnectionLost
