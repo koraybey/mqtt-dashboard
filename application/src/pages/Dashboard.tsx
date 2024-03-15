@@ -101,7 +101,7 @@ const Card = styled.div`
     background-color: rgba(255, 255, 255, 0.04);
     border: 1px solid rgba(255, 255, 255, 0.06);
     height: 400px;
-    min-width: 400px;
+    min-width: 320px;
 `
 
 const CardHeader = styled.div`
