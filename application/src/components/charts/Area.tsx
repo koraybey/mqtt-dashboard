@@ -89,9 +89,9 @@ export const Area = ({ data: _data }: { data: Exposes[] }) => {
                                 x={getX}
                                 y={getY}
                                 yScale={yScale}
-                                strokeWidth={1}
-                                fill={colors.blue[0]}
-                                stroke={colors.blue[1]}
+                                strokeWidth={1.5}
+                                fill={colors.red[0]}
+                                stroke={colors.red[1]}
                                 curve={curveBasis}
                             />
                             <AreaClosed
@@ -99,9 +99,9 @@ export const Area = ({ data: _data }: { data: Exposes[] }) => {
                                 x={getX}
                                 y={getY}
                                 yScale={yScale}
-                                strokeWidth={1}
-                                fill={colors.green[0]}
-                                stroke={colors.green[1]}
+                                strokeWidth={1.5}
+                                fill={colors.blue[0]}
+                                stroke={colors.blue[1]}
                                 curve={curveBasis}
                             />
                             <AreaClosed
@@ -109,9 +109,9 @@ export const Area = ({ data: _data }: { data: Exposes[] }) => {
                                 x={getX}
                                 y={getY}
                                 yScale={yScale}
-                                strokeWidth={1}
-                                fill={colors.red[0]}
-                                stroke={colors.red[1]}
+                                strokeWidth={1.5}
+                                fill={colors.green[0]}
+                                stroke={colors.green[1]}
                             />
                         </Group>
                         <Group left={margin.left} top={margin.top}>

@@ -26,17 +26,18 @@ export const Line = ({ data: _data }: { data: Exposes[] }) => {
     const data = renameTimeToDate(_data)
     const plugAlarm = filterByDeviceId(_data, '0_Plug_Alarm')
     const plugCamera = filterByDeviceId(_data, '0_Plug_Camera')
+    const sensorDoor = filterByDeviceId(_data, '0_Door')
     const measure = R.prop('voltage')
     const calcMaxDomain =
         ((max(plugCamera, measure) as unknown as number) || 0) + 1
-    const calcMinDomain = (min(plugAlarm, measure) as unknown as number) || 0
+    const calcMinDomain = (min(plugCamera, measure) as unknown as number) || 0
 
     return (
         <ParentSize>
             {({
                 width,
                 height,
-                margin = { top: 24, right: 0, bottom: 24, left: 64 },
+                margin = { top: 24, right: 0, bottom: 24, left: 48 },
             }: SharedChartProperties) => {
                 const innerWidth = width - margin.right - margin.left
                 const innerHeight = height - margin.top - margin.bottom
@@ -54,8 +55,9 @@ export const Line = ({ data: _data }: { data: Exposes[] }) => {
                 const yScale = scaleLinear({
                     range: [innerHeight, 0],
                     domain: [calcMinDomain, calcMaxDomain],
-                    nice: true,
                 })
+
+                xScale
 
                 const getX = R.pipe(createChartDate, xScale) ?? 0
                 const getY = R.pipe(measure, yScale) ?? 0
@@ -87,7 +89,7 @@ export const Line = ({ data: _data }: { data: Exposes[] }) => {
                                 data={plugAlarm}
                                 x={getX}
                                 y={getY}
-                                strokeWidth={1}
+                                strokeWidth={1.5}
                                 stroke={colors.blue[1]}
                             />
                             <LinePath
@@ -95,8 +97,16 @@ export const Line = ({ data: _data }: { data: Exposes[] }) => {
                                 data={plugCamera}
                                 x={getX}
                                 y={getY}
-                                strokeWidth={1}
+                                strokeWidth={1.5}
                                 stroke={colors.red[1]}
+                            />
+                            <LinePath
+                                curve={curveBasis}
+                                data={sensorDoor}
+                                x={getX}
+                                y={getY}
+                                strokeWidth={1.5}
+                                stroke={colors.purple[1]}
                             />
                         </Group>
                         <Group left={margin.left} top={margin.top}>

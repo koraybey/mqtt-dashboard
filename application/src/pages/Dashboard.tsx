@@ -32,9 +32,9 @@ export const Dashboard = () => {
                 <Card>
                     <CardHeader>
                         <CardHeaderInformation>
-                            <h2>Voltage</h2>
+                            <h2>Link quality</h2>
                             <p style={{ color: colors.shade[4] }}>
-                                Measured electrical potential value in Volt
+                                Device signal strength measured in LQI
                             </p>
                         </CardHeaderInformation>
                     </CardHeader>
@@ -47,9 +47,9 @@ export const Dashboard = () => {
                 <Card>
                     <CardHeader>
                         <CardHeaderInformation>
-                            <h2>Link quality</h2>
+                            <h2>Voltage</h2>
                             <p style={{ color: colors.shade[4] }}>
-                                Device signal strength measured in LQI
+                                Measured electrical potential value in Volt
                             </p>
                         </CardHeaderInformation>
                     </CardHeader>
