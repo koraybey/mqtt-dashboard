@@ -12,15 +12,7 @@ export const Dashboard = () => {
     const log = useSWR('/log', logFetcher)
 
     return (
-        <div
-            style={{
-                position: 'relative',
-                padding: '36px',
-                display: 'flex',
-                gap: 12,
-                flexDirection: 'column',
-            }}
-        >
+        <MainContainer>
             <DashboardContainer>
                 <SwitchContainer>
                     {!devices.data || devices.isLoading || devices.error
@@ -71,9 +63,20 @@ export const Dashboard = () => {
             <Card>
                 <MqttLogs />
             </Card>
-        </div>
+        </MainContainer>
     )
 }
+
+const MainContainer = styled.div`
+    position: relative;
+    padding: 32px;
+    display: flex;
+    gap: 12px;
+    flex-direction: column;
+    @media (max-width: 600px) {
+        padding: 16px;
+    }
+`
 
 const SwitchContainer = styled.div`
     position: relative;
