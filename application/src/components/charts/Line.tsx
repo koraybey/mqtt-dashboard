@@ -5,14 +5,12 @@ import { ParentSize } from '@visx/responsive'
 import { scaleLinear, scaleTime } from '@visx/scale'
 import { LinePath } from '@visx/shape'
 import { extent, max, min } from '@visx/vendor/d3-array'
-import { format } from '@visx/vendor/d3-format'
 import { curveBasis } from '@vx/curve'
 import * as R from 'ramda'
 
 import {
     axisBottomTickLabel,
     axisLeftTickLabel,
-    defaultChartMargin,
     gridColor,
     tickStroke,
 } from '@/components/charts/styles'
@@ -38,7 +36,7 @@ export const Line = ({ data: _data }: { data: Exposes[] }) => {
             {({
                 width,
                 height,
-                margin = defaultChartMargin,
+                margin = { top: 24, right: 0, bottom: 24, left: 64 },
             }: SharedChartProperties) => {
                 const innerWidth = width - margin.right - margin.left
                 const innerHeight = height - margin.top - margin.bottom
@@ -104,7 +102,7 @@ export const Line = ({ data: _data }: { data: Exposes[] }) => {
                         <Group left={margin.left} top={margin.top}>
                             <AxisBottom
                                 hideZero
-                                numTicks={8}
+                                numTicks={4}
                                 top={innerHeight}
                                 scale={xScale}
                                 stroke={tickStroke}
@@ -113,8 +111,7 @@ export const Line = ({ data: _data }: { data: Exposes[] }) => {
                             />
                             <AxisLeft
                                 hideZero
-                                numTicks={8}
-                                tickFormat={format('.0f')}
+                                numTicks={6}
                                 scale={yScale}
                                 stroke={tickStroke}
                                 tickStroke={tickStroke}

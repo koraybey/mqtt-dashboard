@@ -117,7 +117,7 @@ export const Area = ({ data: _data }: { data: Exposes[] }) => {
                         <Group left={margin.left} top={margin.top}>
                             <AxisBottom
                                 hideZero
-                                numTicks={6}
+                                numTicks={4}
                                 top={innerHeight}
                                 scale={xScale}
                                 stroke={tickStroke}
