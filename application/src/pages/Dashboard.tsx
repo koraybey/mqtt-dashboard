@@ -101,10 +101,13 @@ const Card = styled.div`
     position: relative;
     border-radius: 8px;
     overflow: hidden;
-    background-color: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    background-color: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.08);
     height: 400px;
     min-width: 320px;
+    @media (max-width: 600px) {
+        height: 330px;
+    }
 `
 
 const CardHeader = styled.div`
@@ -125,4 +128,7 @@ const CardHeaderInformation = styled.div`
 
 const ChartContainer = styled.div`
     height: 280px;
+    @media (max-width: 600px) {
+        height: 200px;
+    }
 `

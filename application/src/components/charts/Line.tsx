@@ -1,18 +1,19 @@
 import { AxisBottom, AxisLeft } from '@visx/axis'
-import { GridColumns, GridRows } from '@visx/grid'
+import { GridRows } from '@visx/grid'
 import { Group } from '@visx/group'
 import { ParentSize } from '@visx/responsive'
 import { scaleLinear, scaleTime } from '@visx/scale'
 import { LinePath } from '@visx/shape'
 import { extent, max, min } from '@visx/vendor/d3-array'
+import { format } from '@visx/vendor/d3-format'
 import { curveBasis } from '@vx/curve'
 import * as R from 'ramda'
 
 import {
     axisBottomTickLabel,
     axisLeftTickLabel,
+    defaultChartMargin,
     gridColor,
-    tickStroke,
 } from '@/components/charts/styles'
 import { colors } from '@/theme/colors'
 import type { SharedChartProperties } from '@/types/components'
@@ -37,7 +38,7 @@ export const Line = ({ data: _data }: { data: Exposes[] }) => {
             {({
                 width,
                 height,
-                margin = { top: 24, right: 0, bottom: 24, left: 48 },
+                margin = defaultChartMargin,
             }: SharedChartProperties) => {
                 const innerWidth = width - margin.right - margin.left
                 const innerHeight = height - margin.top - margin.bottom
@@ -68,18 +69,31 @@ export const Line = ({ data: _data }: { data: Exposes[] }) => {
                             <GridRows
                                 scale={yScale}
                                 width={innerWidth}
-                                strokeDasharray={'1'}
-                                stroke={gridColor}
-                                strokeOpacity={0.2}
-                                pointerEvents={'none'}
-                            />
-                            <GridColumns
-                                scale={xScale}
-                                height={innerHeight}
-                                strokeDasharray={'1,2'}
                                 stroke={gridColor}
                                 strokeOpacity={0.1}
                                 pointerEvents={'none'}
+                            />
+
+                            <AxisLeft
+                                scale={yScale}
+                                hideZero
+                                hideTicks
+                                numTicks={5}
+                                hideAxisLine
+                                tickLabelProps={axisLeftTickLabel}
+                                tickFormat={format('.5~g')}
+                            />
+                        </Group>
+                        <Group
+                            top={margin.top}
+                            left={margin.left + margin.left / 4}
+                        >
+                            <AxisBottom
+                                top={innerHeight}
+                                scale={xScale}
+                                hideZero
+                                numTicks={5}
+                                tickLabelProps={axisBottomTickLabel}
                             />
                             {/* 
                             //! TODO Map
@@ -107,25 +121,6 @@ export const Line = ({ data: _data }: { data: Exposes[] }) => {
                                 y={getY}
                                 strokeWidth={1.5}
                                 stroke={colors.purple[1]}
-                            />
-                        </Group>
-                        <Group left={margin.left} top={margin.top}>
-                            <AxisBottom
-                                hideZero
-                                numTicks={4}
-                                top={innerHeight}
-                                scale={xScale}
-                                stroke={tickStroke}
-                                tickStroke={tickStroke}
-                                tickLabelProps={axisBottomTickLabel}
-                            />
-                            <AxisLeft
-                                hideZero
-                                numTicks={6}
-                                scale={yScale}
-                                stroke={tickStroke}
-                                tickStroke={tickStroke}
-                                tickLabelProps={axisLeftTickLabel}
                             />
                         </Group>
                     </svg>

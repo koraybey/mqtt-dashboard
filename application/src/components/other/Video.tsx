@@ -23,6 +23,7 @@ export const Video: React.FC = () => {
         <video
             autoPlay
             muted
+            playsInline
             ref={videoReference}
             style={{
                 height: '100%',

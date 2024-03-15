@@ -29,7 +29,7 @@ export const MqttControl = ({
 
     useEffect(() => {
         void api.start({
-            bg: deviceStatus ? '#d8a200' : 'rgba(255,255,255,0.04)',
+            bg: deviceStatus ? '#d8a200' : 'rgba(255,255,255,0.06)',
         })
     }, [api, deviceStatus, topic])
 
@@ -62,7 +62,7 @@ export const MqttControl = ({
                     backgroundColor: background.bg,
                     width: '100%',
                     height: '100%',
-                    border: '1px solid rgba(255,255,255,0.06)',
+                    border: '1px solid rgba(255,255,255,0.08)',
                     borderRadius: 8,
                     overflow: 'hidden',
                 }}
@@ -86,7 +86,7 @@ const Icon = ({
                     className={'iconoir-contactless'}
                     style={{
                         fontSize: 32,
-                        color: deviceStatus ? 'white' : colors.shade[12],
+                        color: deviceStatus ? 'white' : colors.shade[13],
                         alignSelf: 'flex-end',
                     }}
                 />
@@ -102,7 +102,7 @@ const Icon = ({
                     }
                     style={{
                         fontSize: 32,
-                        color: deviceStatus ? 'white' : colors.shade[12],
+                        color: deviceStatus ? 'white' : colors.shade[13],
                         alignSelf: 'flex-end',
                     }}
                 />
@@ -114,7 +114,7 @@ const Icon = ({
                     className={'iconoir-plug-type-c'}
                     style={{
                         fontSize: 32,
-                        color: deviceStatus ? 'white' : colors.shade[12],
+                        color: deviceStatus ? 'white' : colors.shade[13],
                         alignSelf: 'flex-end',
                     }}
                 />

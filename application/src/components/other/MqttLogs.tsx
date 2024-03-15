@@ -15,6 +15,7 @@ export const MqttLogs = () => {
             style={{
                 height: '100%',
                 overflow: 'auto',
+                justifyContent: 'space-between',
                 padding: 8,
             }}
         >
@@ -25,24 +26,12 @@ export const MqttLogs = () => {
                         style={{
                             display: 'flex',
                             flexDirection: 'row',
-                            alignItems: 'center',
-                            paddingBottom: 4,
-                            paddingTop: 4,
+                            alignItems: 'start',
+                            justifyContent: 'space-between',
+                            paddingBottom: 8,
+                            paddingTop: 8,
                         }}
                     >
-                        <div
-                            style={{
-                                fontSize: 13,
-                                backgroundColor: colors.shade[13],
-                                color: colors.shade[3],
-                                padding: 8,
-                                borderRadius: 8,
-                                marginRight: 4,
-                                fontStyle: 'italic',
-                            }}
-                        >
-                            {log.topic.replace('zigbee2mqtt/', '')}
-                        </div>
                         <SyntaxHighlighter
                             language={'json'}
                             style={qtcreatorDark}
@@ -50,12 +39,26 @@ export const MqttLogs = () => {
                             customStyle={{
                                 fontSize: 13,
                                 lineHeight: 1.6,
+                                padding: 0,
                                 backgroundColor: 'transparent',
                                 overflow: 'hidden',
                             }}
                         >
                             {log.message}
                         </SyntaxHighlighter>
+                        <div
+                            style={{
+                                fontSize: 13,
+                                backgroundColor: colors.shade[13],
+                                color: colors.shade[4],
+                                padding: 8,
+                                borderRadius: 4,
+                                marginLeft: 12,
+                                fontWeight: 600,
+                            }}
+                        >
+                            {log.topic.replace('zigbee2mqtt/', '')}
+                        </div>
                     </div>
                 )
             })}
