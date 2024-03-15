@@ -13,7 +13,7 @@
         "fs": "^0.0.1-security"
     },
     "scripts": {
-        "dev": "nodemon api.js",
+        "start": "nodemon api.js",
         "generateJsonFromLog": "node helpers/mqttLogToJson.js",
         "generateJsonMock": "node helpers/generateMockData.js"
     }

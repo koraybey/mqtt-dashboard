@@ -21,7 +21,9 @@
     },
     "scripts": {
         "prepare": "husky",
-        "lint": "eslint"
+        "lint": "eslint",
+        "start": "pm2 start",
+        "shutdown": "pm2 stop all"
     },
     "lint-staged": {
         "*.{js,cjs,jsx,ts,tsx,md,html,css,json,graphql}": [
@@ -30,5 +32,8 @@
         "*.{js,cjs,jsx,ts,tsx,}": [
             "yarn eslint ."
         ]
+    },
+    "dependencies": {
+        "pm2": "^5.3.1"
     }
 }
