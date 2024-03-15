@@ -22,8 +22,11 @@
     "scripts": {
         "prepare": "husky",
         "lint": "eslint",
-        "start": "pm2 start",
-        "shutdown": "pm2 stop all"
+        "start:application": "yarn workspace application start",
+        "start:server": "yarn workspace server start",
+        "start": "yarn start:application && yarn start:server",
+        "shutdown": "pm2 stop all",
+        "kill": "pm2 kill"
     },
     "lint-staged": {
         "*.{js,cjs,jsx,ts,tsx,md,html,css,json,graphql}": [

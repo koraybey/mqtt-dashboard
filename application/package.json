@@ -6,8 +6,8 @@
     "scripts": {
         "dev": "vite",
         "build": "tsc && vite build",
+        "start": "pm2 start ecosystem.config.cjs",
         "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-        "start": "NODE_ENV=production node server.js",
         "preview": "vite preview"
     },
     "dependencies": {
