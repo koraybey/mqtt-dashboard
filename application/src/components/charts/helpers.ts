@@ -28,3 +28,7 @@ export const groupDeviceValuesByHour = R.pipe(
         format(parseISO(date), 'yyyy-MM-dd-HH')
     )
 )
+
+export const isoToHumanReadableTimestamp = (date: string): string => {
+    return format(parseISO(date), 'HH:mm:ss')
+}

@@ -1,3 +1,4 @@
+import { formatISO } from 'date-fns'
 import type { Message, MQTTError } from 'paho-mqtt'
 import Paho from 'paho-mqtt'
 import * as R from 'ramda'
@@ -15,13 +16,19 @@ const client = new Paho.Client(
 )
 
 client.onConnectionLost = onConnectionLost
-client.onMessageArrived = debounce(onHandleMessage, 100)
+client.onMessageArrived = debounce(onHandleMessage, 50)
+
+type MqttLog = {
+    topic: string
+    message: string
+    timestamp: string
+}
 
 type MqttStore = {
-    logs: { topic: string; message: string }[]
+    logs: MqttLog[]
     isConnected: boolean
     deviceStatus: { [key: string]: string }[]
-    addMessageToLogs: (log: { topic: string; message: string }) => void
+    addMessageToLogs: (log: MqttLog) => void
     updateDeviceStatus: (topic: string, status: boolean) => void
 }
 
@@ -36,7 +43,11 @@ export const useMqttStore = create<MqttStore>()(
                     set((state) => ({
                         logs: [
                             ...state.logs,
-                            { topic: log.topic, message: log.message },
+                            {
+                                topic: log.topic,
+                                message: log.message,
+                                timestamp: log.timestamp,
+                            },
                         ],
                     })),
                 updateDeviceStatus: (topic, status) =>
@@ -68,10 +79,8 @@ client.connect({
     onFailure: () => {
         throw new Error('Cannot connect to MQTT Broker.')
     },
-    keepAliveInterval: 600,
-    cleanSession: true,
-    timeout: 60,
-    mqttVersion: 3,
+    keepAliveInterval: 30,
+    reconnect: true,
 })
 
 export function useMqttSubscribe(topic: string) {
@@ -82,8 +91,8 @@ export function useMqttSubscribe(topic: string) {
     }, [topic, isConnected])
 }
 
-export function mqttPublish(topic: string, payload: string) {
-    const message = new Paho.Message(payload)
+export function mqttPublish(topic: string, payload?: string) {
+    const message = new Paho.Message(payload || '')
     message.destinationName = topic
     client.send(message)
 }
@@ -93,6 +102,7 @@ function onHandleMessage(message: Message) {
     const log = {
         topic: message.destinationName,
         message: message.payloadString,
+        timestamp: formatISO(new Date()).toString(),
     }
     useMqttStore.getState().addMessageToLogs(log)
     switch (message.destinationName) {
@@ -165,5 +175,3 @@ function debounce<F extends (...args: Parameters<F>) => ReturnType<F>>(
     }
     return debounced
 }
-
-// useMqttStore.getState().addMessageToLogs(log)
