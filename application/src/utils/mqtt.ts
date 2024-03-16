@@ -81,19 +81,22 @@ client.connect({
     },
     keepAliveInterval: 30,
     reconnect: true,
+    cleanSession: true,
 })
 
 export function useMqttSubscribe(topic: string) {
     const isConnected = useMqttStore((state) => state.isConnected)
     useEffect(() => {
         if (!isConnected) return
-        client.subscribe(topic)
+        client.subscribe(topic, { qos: 1 })
     }, [topic, isConnected])
 }
 
-export function mqttPublish(topic: string, payload?: string) {
-    const message = new Paho.Message(payload || '')
+export function mqttPublish(topic: string, payload: string) {
+    const message = new Paho.Message(payload)
     message.destinationName = topic
+    message.retained = true
+    message.qos = 1
     client.send(message)
 }
 
