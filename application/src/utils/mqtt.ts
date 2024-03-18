@@ -16,7 +16,7 @@ const client = new Paho.Client(
 )
 
 client.onConnectionLost = onConnectionLost
-client.onMessageArrived = debounce(onHandleMessage, 50)
+client.onMessageArrived = onHandleMessage
 
 type MqttLog = {
     topic: string
@@ -64,7 +64,8 @@ export const useMqttStore = create<MqttStore>()(
                 partialize: (state) =>
                     Object.fromEntries(
                         Object.entries(state).filter(
-                            ([key]) => !['isConnected', 'status'].includes(key)
+                            ([key]) =>
+                                !['isConnected', 'deviceStatus'].includes(key)
                         )
                     ),
             }
@@ -81,7 +82,7 @@ client.connect({
     },
     keepAliveInterval: 30,
     reconnect: true,
-    cleanSession: true,
+    // cleanSession: true,
 })
 
 export function useMqttSubscribe(topic: string) {
@@ -95,8 +96,6 @@ export function useMqttSubscribe(topic: string) {
 export function mqttPublish(topic: string, payload: string) {
     const message = new Paho.Message(payload)
     message.destinationName = topic
-    message.retained = true
-    message.qos = 1
     client.send(message)
 }
 
@@ -164,17 +163,4 @@ function onConnectionLost(responseObject: MQTTError) {
     if (responseObject.errorCode !== 0) {
         throw new Error('Lost MQTT connection')
     }
-}
-
-// ! TODO Move to utils
-function debounce<F extends (...args: Parameters<F>) => ReturnType<F>>(
-    func: F,
-    waitFor: number
-) {
-    let timeout: NodeJS.Timeout
-    const debounced = (...args: Parameters<F>) => {
-        clearTimeout(timeout)
-        timeout = setTimeout(() => func(...args), waitFor)
-    }
-    return debounced
 }
