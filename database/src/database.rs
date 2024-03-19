@@ -5,9 +5,9 @@ use diesel::{
 use dotenv::dotenv;
 use std::env;
 
-type SqlitePool = Pool<ConnectionManager<SqliteConnection>>;
+pub type SqlitePool = Pool<ConnectionManager<SqliteConnection>>;
 
-pub fn establish_connection() -> SqlitePool {
+pub fn get_connection_pool() -> SqlitePool {
     dotenv().ok();
     let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
     let manager = ConnectionManager::<SqliteConnection>::new(database_url);

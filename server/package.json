@@ -14,7 +14,6 @@
     },
     "scripts": {
         "dev": "nodemon api.js",
-        "start": "pm2 start ecosystem.config.cjs",
         "generateJsonFromLog": "node helpers/mqttLogToJson.js",
         "generateJsonMock": "node helpers/generateMockData.js"
     }

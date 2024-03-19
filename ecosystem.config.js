@@ -2,12 +2,20 @@
 module.exports = {
     apps: [
         {
-            name: 'frontend:start',
-            script: 'yarn workspace application start',
+            name: 'frontend',
+            script: 'cd application && NODE_ENV=production node server.js',
         },
         {
-            name: 'server:start',
-            script: 'yarn workspace server start',
+            name: 'server',
+            script: 'cd server && node api.js',
+        },
+        {
+            name: 'mqtt_logger',
+            script: 'cd database && cargo run --bin mqtt_logger',
+        },
+        {
+            name: 'gql_server',
+            script: 'cd database && cargo run --bin gql_server',
         },
     ],
 }

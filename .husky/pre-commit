@@ -1,2 +1,4 @@
 npx --no -- commitlint --edit $1
+cargo clippy --manifest-path database/Cargo.toml
+cargo fmt --check --manifest-path database/Cargo.toml
 yarn lint-staged

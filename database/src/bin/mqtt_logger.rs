@@ -1,4 +1,6 @@
 use diesel::prelude::*;
+use diesel::r2d2::ConnectionManager;
+use diesel::r2d2::Pool;
 use mqtt_sqlite::database::*;
 use mqtt_sqlite::models::*;
 use mqtt_sqlite::schema::*;
@@ -15,7 +17,7 @@ const TOPICS: &[&str] = &[
 const TOPICS_QOS: &[i32] = &[1, 1, 1];
 
 fn main() {
-    let pool = establish_connection();
+    let pool: Pool<ConnectionManager<SqliteConnection>> = get_connection_pool();
     let connection: &mut SqliteConnection = &mut pool.get().unwrap();
 
     let cli = Client::new(BROKER).unwrap_or_else(|err| {
@@ -96,6 +98,7 @@ fn subscribe(cli: &Client) {
 }
 
 pub fn create_message(connection: &mut SqliteConnection, message: Message) {
+    println!("{}", message);
 
     let new_message = NewLogMessage {
         topic: message.topic(),

@@ -22,17 +22,16 @@
     "scripts": {
         "prepare": "husky",
         "lint": "eslint",
-        "start:application": "yarn workspace application start",
-        "start:server": "yarn workspace server start",
-        "start": "yarn start:application && yarn start:server",
+        "start": "pm2 start",
         "shutdown": "pm2 stop all",
-        "kill": "pm2 kill"
+        "kill": "pm2 kill",
+        "monitor": "pm2 monit"
     },
     "lint-staged": {
         "*.{js,cjs,jsx,ts,tsx,md,html,css,json,graphql}": [
             "yarn prettier -c"
         ],
-        "*.{js,cjs,jsx,ts,tsx,}": [
+        "*.{js,cjs,jsx,ts,tsx}": [
             "yarn eslint ."
         ]
     },
