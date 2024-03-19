@@ -80,9 +80,8 @@ client.connect({
     onFailure: () => {
         throw new Error('Cannot connect to MQTT Broker.')
     },
-    keepAliveInterval: 30,
+    keepAliveInterval: 120,
     reconnect: true,
-    // cleanSession: true,
 })
 
 export function useMqttSubscribe(topic: string) {

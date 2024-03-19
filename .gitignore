@@ -1,15 +1,11 @@
-# Logs
-logs
-*.log
-log.txt
-yarn-debug.log*
-yarn-error.log*
-
 node_modules
 dist
 dist-ssr
 *.local
 static
+target
+.cargo
+*.sqlite
 
 # Editor directories and files
 .vscode/*
@@ -21,3 +17,10 @@ static
 *.njsproj
 *.sln
 *.sw?
+
+# Logs
+logs
+*.log
+log.txt
+yarn-debug.log*
+yarn-error.log*

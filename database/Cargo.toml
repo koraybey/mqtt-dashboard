@@ -1,0 +1,11 @@
+[package]
+name = "mqtt-sqlite"
+version = "0.0.1"
+description = "Write MQTT messages to SQLite database."
+edition = "2021"
+license = "MIT"
+
+[dependencies]
+paho-mqtt = "0.12.3"
+diesel = { version = "2.1.5", features = ["sqlite", "r2d2"] }
+dotenv = "0.15.0"
