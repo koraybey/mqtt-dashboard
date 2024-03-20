@@ -8,7 +8,7 @@ My previous setup had too many layers of complexity and provided separate servic
 
 ## Ingredients
 
--   **Server**: [Zigbee2MQTT](https://www.zigbee2mqtt.io/) is unparalleled when it comes to eliminating the need for proprietary Zigbee bridges. Grab a [Raspberry Pi](https://www.raspberrypi.com/) or [HP t530 Thin Client](https://www.ebay.de/itm/144913355269?epid=17016765429)for €30, and install a [MQTT broker](https://www.mosquitto.org/download/)
+-   **Server**: [Zigbee2MQTT](https://www.zigbee2mqtt.io/) is unparalleled when it comes to eliminating the need for proprietary Zigbee bridges. Grab a [Raspberry Pi](https://www.raspberrypi.com/) or [HP t530 Thin Client](https://www.ebay.de/itm/144913355269?epid=17016765429) for €30, and install a [MQTT broker](https://www.mosquitto.org/download/)
 -   **Zigbee adapter**: An adapter compatible Zigbee2MQTT is required. I use [SONOFF Zigbee 3.0 USB Dongle Plus](https://www.amazon.de/-/en/gp/product/B09KXTCMSC?) at home and I find it very reliable
 -   **Camera with RTSP**: Ideally grab a camera without internet connection. Stay away from unknown and unreliable brands for security reasons. I configured an unused [E1 Pro](https://www.amazon.de/Reolink-%C3%9Cberwachungskamera-Kameramonitor-IR-Nachtsicht-SD-Kartenslot-4mp-Wlan-Kamera-Schwarz/dp/B08S6TKP26) camera I have lying around
 -   **RTSP to HLS converter**: Video stream must be consumable in browser. Hence, conversion to m3u8 is needed. Previously I hosted ffmpeg instances but currently I use a native converter called [RTSPtoWeb](https://github.com/deepch/RTSPtoWeb)
@@ -18,8 +18,7 @@ My previous setup had too many layers of complexity and provided separate servic
 **You need to bring your ingredients and deployment strategies of your choice. This project only contains the React front-end that allows you to monitor health, control devices and watch the stream, and a back-end to process and serve the data end-points.**
 
 > [!CAUTION]  
-> This dashboard, should never, ever be exposed to internet. I will expose it once for the demo.
-> When the demo period is over, only the devices connected to [Nebula](https://github.com/slackhq/nebula) peer-to-peer network will be able to access the dashboard. Given that dashboard is exposed to the internet, camera is aimed to an unoccupied area of the house and only the studio switches can be controlled.
+> It is not advised to expose this dashboard to internet. Use peer-to-peer overlay networks such as [Nebula](https://github.com/slackhq/nebula) to access the local computer where the dashboard is running.
 
 ## Preparation
 
