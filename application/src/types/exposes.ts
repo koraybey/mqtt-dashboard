@@ -43,4 +43,10 @@ export type ParsedMessage = {
     contact?: boolean
 }
 
+export type LogMessage = {
+    topic: string
+    payload: string
+    date: number
+}
+
 export type Exposes = ContactExposes | PlugExposes | MotionExposes

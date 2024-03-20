@@ -5,15 +5,25 @@ import { xt256 } from 'react-syntax-highlighter/dist/esm/styles/hljs'
 SyntaxHighlighter.registerLanguage('json', json)
 
 import { useEffect, useRef } from 'react'
+import useSWR from 'swr'
 
 import { colors } from '@/theme/colors'
-import { useMqttStore } from '@/utils/mqtt'
+import { logFetcher } from '@/utils/api'
 
-import { isoToHumanReadableTimestamp } from '../charts/helpers'
+import { unixTimeToHumanReadable } from '../charts/helpers'
 
 export const MqttLogs = () => {
-    //! TODO Add connecting, error and reconnecting states to display client status
-    const logs = useMqttStore((state) => state.logs)
+    const { data, isLoading } = useSWR(
+        `{
+            logs {
+              topic
+              payload
+              date
+            }
+          }`,
+        logFetcher
+    )
+
     const scrollToBottomRef = useRef<HTMLDivElement>(null)
 
     const scrollToBottomCalc =
@@ -22,7 +32,9 @@ export const MqttLogs = () => {
 
     useEffect(() => {
         scrollToBottomRef?.current?.scrollTo(0, scrollToBottomCalc)
-    }, [scrollToBottomCalc, logs])
+    }, [scrollToBottomCalc, isLoading])
+
+    if (isLoading || !data) return null
 
     return (
         <div
@@ -35,7 +47,7 @@ export const MqttLogs = () => {
             }}
             ref={scrollToBottomRef}
         >
-            {logs.map((log, index) => {
+            {data.logs.map((log, index) => {
                 return (
                     <div
                         key={index}
@@ -69,9 +81,7 @@ export const MqttLogs = () => {
                             >
                                 {log.topic.replace('zigbee2mqtt/', '')}
                             </span>
-                            <span>
-                                {isoToHumanReadableTimestamp(log.timestamp)}
-                            </span>
+                            <span>{unixTimeToHumanReadable(log.date)}</span>
                         </div>
                         <SyntaxHighlighter
                             language={'json'}
@@ -85,7 +95,7 @@ export const MqttLogs = () => {
                                 overflow: 'hidden',
                             }}
                         >
-                            {log.message}
+                            {log.payload}
                         </SyntaxHighlighter>
                     </div>
                 )

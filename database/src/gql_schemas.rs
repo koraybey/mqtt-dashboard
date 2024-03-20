@@ -1,34 +1,43 @@
 use crate::models::LogMessage;
 use crate::schema::devices::dsl::*;
+use diesel::connection::DefaultLoadingMode;
 use diesel::prelude::*;
 use diesel::SqliteConnection;
 use juniper::{
     graphql_object, EmptyMutation, EmptySubscription, FieldError, FieldResult,
 };
 
-use crate::context::GraphQLContext;
+use crate::database::SqlitePool;
 
-pub struct Query;
+pub struct GraphQLContext {
+    pub pool: SqlitePool,
+}
+
+impl juniper::Context for GraphQLContext {}
+
+pub struct QueryRoot;
 
 #[graphql_object(Context = GraphQLContext)]
-impl Query {
-    #[graphql(name = "getLogs")]
-    pub fn get_logs(context: &GraphQLContext) -> FieldResult<Vec<LogMessage>> {
+impl QueryRoot {
+    fn logs(context: &GraphQLContext) -> FieldResult<Vec<LogMessage>> {
         let connection: &mut SqliteConnection = &mut context.pool.get().unwrap();
-        let res = devices.load::<LogMessage>(connection);
-        handle_graphql_res(res)
+        let res = devices
+            .load_iter::<LogMessage, DefaultLoadingMode>(connection)?
+            .take(100)
+            .collect::<QueryResult<Vec<_>>>()?;
+        handle_graphql_res(Ok(res))
     }
 }
 
 pub type Schema = juniper::RootNode<
     'static,
-    Query,
+    QueryRoot,
     EmptyMutation<GraphQLContext>,
     EmptySubscription<GraphQLContext>,
 >;
 
 pub fn create_schema() -> Schema {
-    Schema::new(Query, EmptyMutation::new(), EmptySubscription::new())
+    Schema::new(QueryRoot, EmptyMutation::new(), EmptySubscription::new())
 }
 
 fn handle_graphql_res<T>(res: Result<T, diesel::result::Error>) -> FieldResult<T> {

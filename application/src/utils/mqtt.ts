@@ -1,4 +1,3 @@
-import { formatISO } from 'date-fns'
 import type { Message, MQTTError } from 'paho-mqtt'
 import Paho from 'paho-mqtt'
 import * as R from 'ramda'
@@ -18,17 +17,9 @@ const client = new Paho.Client(
 client.onConnectionLost = onConnectionLost
 client.onMessageArrived = onHandleMessage
 
-type MqttLog = {
-    topic: string
-    message: string
-    timestamp: string
-}
-
 type MqttStore = {
-    logs: MqttLog[]
     isConnected: boolean
     deviceStatus: { [key: string]: string }[]
-    addMessageToLogs: (log: MqttLog) => void
     updateDeviceStatus: (topic: string, status: boolean) => void
 }
 
@@ -39,17 +30,6 @@ export const useMqttStore = create<MqttStore>()(
                 logs: [],
                 isConnected: false,
                 deviceStatus: [],
-                addMessageToLogs: (log) =>
-                    set((state) => ({
-                        logs: [
-                            ...state.logs,
-                            {
-                                topic: log.topic,
-                                message: log.message,
-                                timestamp: log.timestamp,
-                            },
-                        ],
-                    })),
                 updateDeviceStatus: (topic, status) =>
                     set((state) => ({
                         deviceStatus: {
@@ -100,12 +80,6 @@ export function mqttPublish(topic: string, payload: string) {
 
 function onHandleMessage(message: Message) {
     const parsedMessage = JSON.parse(message.payloadString) as ParsedMessage
-    const log = {
-        topic: message.destinationName,
-        message: message.payloadString,
-        timestamp: formatISO(new Date()).toString(),
-    }
-    useMqttStore.getState().addMessageToLogs(log)
     switch (message.destinationName) {
         case 'zigbee2mqtt/0_light_studio': {
             if (RA.isNilOrEmpty(parsedMessage.state)) {

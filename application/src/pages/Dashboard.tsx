@@ -5,11 +5,11 @@ import { Area, Line } from '@/components/charts'
 import { MqttControl, Video } from '@/components/other'
 import { MqttLogs } from '@/components/other/MqttLogs'
 import { colors } from '@/theme/colors'
-import { deviceFetcher, logFetcher } from '@/utils/api'
+import { deviceFetcher, deviceLogFetcher } from '@/utils/api'
 
 export const Dashboard = () => {
     const devices = useSWR('/devices', deviceFetcher)
-    const log = useSWR('/log', logFetcher)
+    const log = useSWR('/log', deviceLogFetcher)
 
     return (
         <MainContainer>

@@ -1,4 +1,4 @@
-import { format, parseISO } from 'date-fns'
+import { format, fromUnixTime, parseISO } from 'date-fns'
 import * as R from 'ramda'
 import * as RA from 'ramda-adjunct'
 
@@ -29,6 +29,10 @@ export const groupDeviceValuesByHour = R.pipe(
     )
 )
 
-export const isoToHumanReadableTimestamp = (date: string): string => {
+export const isoToHumanReadable = (date: string): string => {
     return format(parseISO(date), 'HH:mm:ss')
+}
+
+export const unixTimeToHumanReadable = (date: number): string => {
+    return format(fromUnixTime(date), 'HH:mm:ss')
 }

@@ -6,7 +6,6 @@ edition = "2021"
 license = "MIT"
 
 [dependencies]
-actix-rt = "2.9.0"
 actix-web = "4.5.1"
 actix-web-lab = "0.20.0"
 actix-cors = "0.7.0"

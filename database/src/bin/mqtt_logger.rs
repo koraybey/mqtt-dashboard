@@ -8,13 +8,20 @@ use mqtt_sqlite::schema::*;
 use paho_mqtt::{Client, ConnectOptionsBuilder, Message};
 use std::{process, thread, time::Duration};
 
+// ! TODO Read devices.json file or create a device conf setup
 const BROKER: &str = "ws://dashboard.perseus.digital:1881";
 const TOPICS: &[&str] = &[
-    "zigbee2mqtt/sensors/#",
-    "zigbee2mqtt/switches/#",
-    "zigbee2mqtt/plugs/#",
+    "zigbee2mqtt/0_contact_fridge",
+    "zigbee2mqtt/0_contact_door",
+    "zigbee2mqtt/0_contact_balcony",
+    "zigbee2mqtt/1_contact_balcony",
+    "zigbee2mqtt/0_plug_studio",
+    "zigbee2mqtt/0_plug_camera",
+    "zigbee2mqtt/0_plug_alarm",
+    "zigbee2mqtt/0_light_studio",
+    "zigbee2mqtt/0_motion_salotto",
 ];
-const TOPICS_QOS: &[i32] = &[1, 1, 1];
+const TOPICS_QOS: &[i32] = &[1, 1, 1, 1, 1, 1, 1, 1, 1];
 
 fn main() {
     let pool: Pool<ConnectionManager<SqliteConnection>> = get_connection_pool();
