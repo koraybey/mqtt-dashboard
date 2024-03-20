@@ -51,7 +51,7 @@ async fn main() -> std::io::Result<()> {
             .wrap(Cors::permissive())
             .wrap(middleware::Logger::default())
     })
-    .bind(("0.0.0.0", 4000))?
+    .bind(("127.0.0.1", 4000))?
     .workers(2)
     .run()
     .await

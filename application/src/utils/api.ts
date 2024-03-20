@@ -4,13 +4,11 @@ import { GraphQLClient } from 'graphql-request'
 import type { Devices, Exposes, LogMessage } from '@/types/exposes'
 
 const instance = axios.create({
-    baseURL: 'http://dashboard.perseus.digital:3001',
+    baseURL: 'http://127.0.0.1:3001',
     timeout: 40_000,
 })
 
-export const client = new GraphQLClient(
-    'http://dashboard.perseus.digital:4000/graphql'
-)
+export const client = new GraphQLClient('http://127.0.0.1:4000/graphql')
 
 export const logFetcher = (query: string) => {
     return client.request(query).then((data) => {
