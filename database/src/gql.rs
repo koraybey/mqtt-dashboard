@@ -2,7 +2,6 @@ use crate::models::DeviceInfo;
 use crate::models::Devices;
 use crate::models::LogMessage;
 use crate::schema::devices::dsl::*;
-use diesel::connection::DefaultLoadingMode;
 use diesel::prelude::*;
 use diesel::SqliteConnection;
 use juniper::{
@@ -23,11 +22,8 @@ pub struct DevicesQuery;
 impl Query {
     fn logs(context: &GraphQLContext) -> FieldResult<Vec<LogMessage>> {
         let connection: &mut SqliteConnection = &mut context.pool.get().unwrap();
-        let res = devices
-            .load_iter::<LogMessage, DefaultLoadingMode>(connection)?
-            .take(100)
-            .collect::<QueryResult<Vec<_>>>()?;
-        handle_graphql_res(Ok(res))
+        let res = devices.order(id.desc()).limit(50).load(connection);
+        handle_graphql_res(res)
     }
     fn devices() -> Vec<DeviceInfo> {
         let path = "./devices.json";

@@ -9,7 +9,7 @@ use actix_web::{
 use juniper::http::{graphiql::graphiql_source, GraphQLRequest};
 use mqtt_sqlite::{
     database::{get_connection_pool, SqlitePool},
-    gql_schemas::{create_schema, GraphQLContext, Schema},
+    gql::{create_schema, GraphQLContext, Schema},
 };
 
 use actix_web_lab::respond::Html;
