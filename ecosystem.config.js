@@ -3,19 +3,15 @@ module.exports = {
     apps: [
         {
             name: 'frontend',
-            script: 'cd application && NODE_ENV=production node server.js',
-        },
-        {
-            name: 'server',
-            script: 'cd server && node api.js',
+            script: 'pnpm application dev',
         },
         {
             name: 'mqtt_logger',
-            script: 'cd database && cargo run --bin mqtt_logger',
+            script: 'pnpm database start:logger',
         },
         {
             name: 'gql_server',
-            script: 'cd database && cargo run --bin gql_server',
+            script: 'pnpm database start:graphql',
         },
     ],
 }

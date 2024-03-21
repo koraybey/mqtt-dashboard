@@ -14,13 +14,11 @@ use mqtt_sqlite::{
 
 use actix_web_lab::respond::Html;
 
-/// GraphiQL playground UI
 #[get("/graphiql")]
 async fn graphql_playground() -> impl Responder {
     Html(graphiql_source("/graphql", None))
 }
 
-/// GraphQL endpoint
 #[route("/graphql", method = "GET", method = "POST")]
 async fn graphql(
     pool: web::Data<SqlitePool>,

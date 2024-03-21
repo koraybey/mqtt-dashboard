@@ -5,6 +5,7 @@ import { xt256 } from 'react-syntax-highlighter/dist/esm/styles/hljs'
 SyntaxHighlighter.registerLanguage('json', json)
 
 import { useEffect, useRef } from 'react'
+import styled from 'styled-components'
 import useSWR from 'swr'
 
 import { colors } from '@/theme/colors'
@@ -31,22 +32,14 @@ export const MqttLogs = () => {
         (scrollToBottomRef?.current?.clientHeight || 0)
 
     useEffect(() => {
+        if (isLoading || !data) return
         scrollToBottomRef?.current?.scrollTo(0, scrollToBottomCalc)
-    }, [scrollToBottomCalc, isLoading])
+    }, [scrollToBottomCalc, isLoading, data])
 
     if (isLoading || !data) return null
 
     return (
-        <div
-            style={{
-                justifyContent: 'space-between',
-                position: 'relative',
-                height: '100%',
-                padding: 8,
-                overflow: 'auto',
-            }}
-            ref={scrollToBottomRef}
-        >
+        <MqttLogsContainer ref={scrollToBottomRef}>
             {data.logs.map((log, index) => {
                 return (
                     <div
@@ -81,7 +74,9 @@ export const MqttLogs = () => {
                             >
                                 {log.topic.replace('zigbee2mqtt/', '')}
                             </span>
-                            <span>{unixTimeToHumanReadable(log.date)}</span>
+                            <span>
+                                {unixTimeToHumanReadable(log.date as number)}
+                            </span>
                         </div>
                         <SyntaxHighlighter
                             language={'json'}
@@ -101,6 +96,14 @@ export const MqttLogs = () => {
                 )
             })}
             <div ref={scrollToBottomRef} />
-        </div>
+        </MqttLogsContainer>
     )
 }
+
+const MqttLogsContainer = styled.div`
+    height: 100%;
+    padding: 8px;
+    justify-content: space-between;
+    position: relative;
+    overflow: auto;
+`

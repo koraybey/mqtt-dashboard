@@ -8,7 +8,6 @@ use mqtt_sqlite::schema::*;
 use paho_mqtt::{Client, ConnectOptionsBuilder, Message};
 use std::{process, thread, time::Duration};
 
-// ! TODO Read devices.json file or create a device conf setup
 const BROKER: &str = "ws://10.147.17.93:1881";
 const TOPICS: &[&str] = &[
     "zigbee2mqtt/0_contact_fridge",

@@ -12,6 +12,21 @@ pub struct LogMessage {
     pub date: chrono::NaiveDateTime,
 }
 
+#[derive(GraphQLObject, serde::Deserialize)]
+pub struct DeviceInfo {
+    pub topic: String,
+    pub alias: String,
+    pub device_type: String,
+    pub qos: i32,
+}
+
+#[derive(GraphQLObject, serde::Deserialize)]
+pub struct Devices {
+    pub host: String,
+    pub port: i32,
+    pub devices: Vec<DeviceInfo>,
+}
+
 #[derive(Insertable)]
 #[diesel(table_name = devices)]
 pub struct NewLogMessage<'a> {

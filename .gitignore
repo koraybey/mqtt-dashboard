@@ -2,10 +2,10 @@ node_modules
 dist
 dist-ssr
 *.local
-static
 target
 .cargo
 *.sqlite
+generated
 
 # Editor directories and files
 .vscode/*

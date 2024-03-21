@@ -9,7 +9,7 @@ export const Video: React.FC = () => {
     useEffect(() => {
         if (Hls.isSupported()) {
             hls.loadSource(
-                'http://127.0.0.1:8083/stream/home/channel/0/hls/live/index.m3u8'
+                'http://10.147.17.93:8083/stream/home/channel/0/hls/live/index.m3u8'
             )
             if (!videoReference.current) return
             hls.attachMedia(videoReference.current)

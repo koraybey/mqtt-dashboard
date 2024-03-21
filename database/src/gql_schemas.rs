@@ -1,3 +1,5 @@
+use crate::models::DeviceInfo;
+use crate::models::Devices;
 use crate::models::LogMessage;
 use crate::schema::devices::dsl::*;
 use diesel::connection::DefaultLoadingMode;
@@ -6,6 +8,7 @@ use diesel::SqliteConnection;
 use juniper::{
     graphql_object, EmptyMutation, EmptySubscription, FieldError, FieldResult,
 };
+use std::fs;
 
 use crate::database::SqlitePool;
 
@@ -13,12 +16,11 @@ pub struct GraphQLContext {
     pub pool: SqlitePool,
 }
 
-impl juniper::Context for GraphQLContext {}
-
-pub struct QueryRoot;
+pub struct Query;
+pub struct DevicesQuery;
 
 #[graphql_object(Context = GraphQLContext)]
-impl QueryRoot {
+impl Query {
     fn logs(context: &GraphQLContext) -> FieldResult<Vec<LogMessage>> {
         let connection: &mut SqliteConnection = &mut context.pool.get().unwrap();
         let res = devices
@@ -27,17 +29,24 @@ impl QueryRoot {
             .collect::<QueryResult<Vec<_>>>()?;
         handle_graphql_res(Ok(res))
     }
+    fn devices() -> Vec<DeviceInfo> {
+        let path = "./devices.json";
+        let data = fs::read_to_string(path).expect("Unable to read file");
+        let res: Devices = serde_json::from_str(&data).expect("Unable to parse");
+        let all_devices: Vec<DeviceInfo> = res.devices;
+        return all_devices;
+    }
 }
 
 pub type Schema = juniper::RootNode<
     'static,
-    QueryRoot,
+    Query,
     EmptyMutation<GraphQLContext>,
     EmptySubscription<GraphQLContext>,
 >;
 
 pub fn create_schema() -> Schema {
-    Schema::new(QueryRoot, EmptyMutation::new(), EmptySubscription::new())
+    Schema::new(Query, EmptyMutation::new(), EmptySubscription::new())
 }
 
 fn handle_graphql_res<T>(res: Result<T, diesel::result::Error>) -> FieldResult<T> {

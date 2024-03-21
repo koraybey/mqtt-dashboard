@@ -6,8 +6,10 @@
     "scripts": {
         "dev": "vite",
         "build": "tsc && vite build",
+        "preview": "vite preview",
+        "start": "NODE_ENV=production node app.js",
         "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-        "preview": "vite preview"
+        "codegen": "graphql-codegen --config codegen.ts"
     },
     "dependencies": {
         "@react-spring/web": "^9.7.3",
@@ -49,6 +51,9 @@
         "zustand": "^4.5.2"
     },
     "devDependencies": {
+        "@graphql-codegen/cli": "5.0.2",
+        "@graphql-codegen/client-preset": "4.2.4",
+        "@graphql-typed-document-node/core": "^3.2.0",
         "@types/chroma-js": "^2.4.4",
         "@types/node": "^20.11.25",
         "@types/paho-mqtt": "^1.0.10",
@@ -62,11 +67,26 @@
         "@typescript-eslint/parser": "^7.2.0",
         "@vitejs/plugin-react": "^4.2.1",
         "chroma-js": "^2.4.2",
+        "eslint": "^8.57.0",
+        "eslint-config-prettier": "^9.1.0",
+        "eslint-plugin-functional": "^6.1.1",
+        "eslint-plugin-prettier": "^5.1.3",
         "eslint-plugin-react": "^7.34.0",
         "eslint-plugin-react-hooks": "^4.6.0",
         "eslint-plugin-react-refresh": "^0.4.5",
+        "eslint-plugin-simple-import-sort": "^12.0.0",
+        "eslint-plugin-unicorn": "^51.0.1",
+        "prettier": "^3.2.5",
         "typescript": "^5.4.2",
         "typescript-eslint": "^7.2.0",
         "vite": "^5.1.4"
+    },
+    "lint-staged": {
+        "*.{js,cjs,jsx,ts,tsx,md,html,css,json,graphql}": [
+            "pnpm prettier -c"
+        ],
+        "*.{js,cjs,jsx,ts,tsx}": [
+            "pnpm lint"
+        ]
     }
 }

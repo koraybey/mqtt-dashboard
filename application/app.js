@@ -5,4 +5,4 @@ const app = express()
 ViteExpress.config({ mode: 'production' })
 
 // eslint-disable-next-line no-console
-ViteExpress.listen(app, 80, () => console.log('Server is listening...'))
+ViteExpress.listen(app, 8080, () => console.log('Server is listening...'))

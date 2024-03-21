@@ -1,6 +1,5 @@
 import type { Message, MQTTError } from 'paho-mqtt'
 import Paho from 'paho-mqtt'
-import * as R from 'ramda'
 import * as RA from 'ramda-adjunct'
 import { useEffect } from 'react'
 import { create } from 'zustand'
@@ -9,7 +8,7 @@ import { createJSONStorage, devtools, persist } from 'zustand/middleware'
 import type { ParsedMessage } from '@/types/exposes'
 
 const client = new Paho.Client(
-    '127.0.0.1',
+    '10.147.17.93',
     Number(1881),
     `mqttjs_${Math.random().toString(16).slice(2, 10)}`
 )
@@ -80,56 +79,15 @@ export function mqttPublish(topic: string, payload: string) {
 
 function onHandleMessage(message: Message) {
     const parsedMessage = JSON.parse(message.payloadString) as ParsedMessage
-    switch (message.destinationName) {
-        case 'zigbee2mqtt/0_light_studio': {
-            if (RA.isNilOrEmpty(parsedMessage.state)) {
-                return
-            }
-            useMqttStore
-                .getState()
-                .updateDeviceStatus(
-                    message.destinationName,
-                    parsedMessage.state === 'ON' ? true : false
-                )
-            break
-        }
-        case 'zigbee2mqtt/0_plug_studio': {
-            if (RA.isNilOrEmpty(parsedMessage.state)) {
-                return
-            }
-            useMqttStore
-                .getState()
-                .updateDeviceStatus(
-                    message.destinationName,
-                    parsedMessage.state === 'ON' ? true : false
-                )
-            break
-        }
-        case 'zigbee2mqtt/0_contact_balcony': {
-            if (R.isNil(parsedMessage.contact)) {
-                return
-            }
-            useMqttStore
-                .getState()
-                .updateDeviceStatus(
-                    message.destinationName,
-                    !parsedMessage.contact
-                )
-            break
-        }
-        case 'zigbee2mqtt/0_contact_door': {
-            if (R.isNil(parsedMessage.contact)) {
-                return
-            }
-            useMqttStore
-                .getState()
-                .updateDeviceStatus(
-                    message.destinationName,
-                    !parsedMessage.contact
-                )
-            break
-        }
+    if (RA.isNilOrEmpty(parsedMessage)) {
+        return
     }
+    const state = parsedMessage.state
+        ? parsedMessage.state === 'ON'
+            ? true
+            : false
+        : !parsedMessage.contact
+    useMqttStore.getState().updateDeviceStatus(message.destinationName, state)
 }
 
 function onConnectionLost(responseObject: MQTTError) {

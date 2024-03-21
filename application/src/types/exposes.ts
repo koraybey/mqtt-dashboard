@@ -49,4 +49,10 @@ export type LogMessage = {
     date: number
 }
 
+export type DeviceList = {
+    topic: string
+    payload: string
+    date: number
+}
+
 export type Exposes = ContactExposes | PlugExposes | MotionExposes

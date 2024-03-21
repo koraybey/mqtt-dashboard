@@ -18,7 +18,7 @@ export const MqttControl = ({
     )
 
     const handleClick = useCallback(() => {
-        if (type === 'sensor') return
+        if (type === ('sensor' || 'contact')) return
         const payload = { state: deviceStatus ? 'OFF' : 'ON' }
         mqttPublish(`${topic}/set`, JSON.stringify(payload))
     }, [deviceStatus, topic, type])
@@ -37,6 +37,7 @@ export const MqttControl = ({
         <div
             style={{
                 position: 'relative',
+                minHeight: 150,
             }}
         >
             <div
@@ -85,7 +86,19 @@ const Icon = ({
                 <i
                     className={'iconoir-contactless'}
                     style={{
-                        fontSize: 32,
+                        fontSize: 24,
+                        color: deviceStatus ? 'white' : colors.shade[13],
+                        alignSelf: 'flex-end',
+                    }}
+                />
+            )
+        }
+        case 'contact': {
+            return (
+                <i
+                    className={'iconoir-contactless'}
+                    style={{
+                        fontSize: 24,
                         color: deviceStatus ? 'white' : colors.shade[13],
                         alignSelf: 'flex-end',
                     }}
@@ -101,7 +114,7 @@ const Icon = ({
                             : 'iconoir-light-bulb-off'
                     }
                     style={{
-                        fontSize: 32,
+                        fontSize: 24,
                         color: deviceStatus ? 'white' : colors.shade[13],
                         alignSelf: 'flex-end',
                     }}
@@ -113,7 +126,7 @@ const Icon = ({
                 <i
                     className={'iconoir-plug-type-c'}
                     style={{
-                        fontSize: 32,
+                        fontSize: 24,
                         color: deviceStatus ? 'white' : colors.shade[13],
                         alignSelf: 'flex-end',
                     }}
