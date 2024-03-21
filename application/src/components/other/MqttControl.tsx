@@ -16,7 +16,6 @@ export const MqttControl = ({
     const deviceStatus = useMqttStore((state) =>
         R.path([topic, 'status'])(state.deviceStatus)
     )
-
     const handleClick = useCallback(() => {
         if (type === ('sensor' || 'contact')) return
         const payload = { state: deviceStatus ? 'OFF' : 'ON' }
@@ -24,17 +23,18 @@ export const MqttControl = ({
     }, [deviceStatus, topic, type])
 
     const [background, api] = useSpring(() => ({
-        bg: 'rgba(255,255,255,0.04)',
+        bg: 'transparent',
     }))
 
     useEffect(() => {
         void api.start({
-            bg: deviceStatus ? '#d8a200' : 'rgba(255,255,255,0.06)',
+            bg: deviceStatus ? '#d8a200' : 'transparent',
         })
     }, [api, deviceStatus, topic])
 
     return (
         <div
+            className={'rounded-lg border bg-zinc-950 dark:bg-zinc-900'}
             style={{
                 position: 'relative',
                 minHeight: 150,
@@ -54,7 +54,13 @@ export const MqttControl = ({
                     pointerEvents: 'none',
                 }}
             >
-                <h3>{name}</h3>
+                <h3
+                    className={
+                        'scroll-m-20 text-xl font-semibold tracking-tight'
+                    }
+                >
+                    {name}
+                </h3>
                 <Icon type={type} deviceStatus={deviceStatus as boolean} />
             </div>
             <animated.button
@@ -63,7 +69,6 @@ export const MqttControl = ({
                     backgroundColor: background.bg,
                     width: '100%',
                     height: '100%',
-                    border: '1px solid rgba(255,255,255,0.08)',
                     borderRadius: 8,
                     overflow: 'hidden',
                 }}

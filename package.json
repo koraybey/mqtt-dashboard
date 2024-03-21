@@ -1,22 +1,22 @@
 {
-    "private": true,
-    "devDependencies": {
-        "@commitlint/cli": "^19.1.0",
-        "@commitlint/config-conventional": "^19.1.0",
-        "husky": "^9.0.11",
-        "lint-staged": "^15.2.2",
-        "pm2": "^5.3.1"
-    },
-    "preinstall": "npx only-allow pnpm",
-    "scripts": {
-        "application": "pnpm --filter application",
-        "database": "pnpm --filter database",
-        "server": "pnpm --filter server",
-        "prepare": "husky",
-        "lint": "eslint",
-        "start": "pm2 start",
-        "shutdown": "pm2 stop all",
-        "kill": "pm2 kill",
-        "monitor": "pm2 monit"
-    }
+  "private": true,
+  "devDependencies": {
+    "@commitlint/cli": "^19.1.0",
+    "@commitlint/config-conventional": "^19.1.0",
+    "husky": "^9.0.11",
+    "lint-staged": "^15.2.2",
+    "pm2": "^5.3.1"
+  },
+  "preinstall": "npx only-allow pnpm",
+  "scripts": {
+    "application": "pnpm --filter application",
+    "database": "pnpm --filter database",
+    "server": "pnpm --filter server",
+    "prepare": "husky",
+    "lint": "eslint",
+    "start": "pm2 start",
+    "shutdown": "pm2 stop all",
+    "kill": "pm2 kill",
+    "monitor": "pm2 monit"
+  }
 }

@@ -19,7 +19,7 @@ client.onMessageArrived = onHandleMessage
 type MqttStore = {
     isConnected: boolean
     deviceStatus: { [key: string]: string }[]
-    updateDeviceStatus: (topic: string, status: boolean) => void
+    updateDeviceStatus: (topic: string, status: boolean | undefined) => void
 }
 
 export const useMqttStore = create<MqttStore>()(
@@ -77,17 +77,27 @@ export function mqttPublish(topic: string, payload: string) {
     client.send(message)
 }
 
+const determineState = (parsedMessage: ParsedMessage) => {
+    if (parsedMessage.state) {
+        return parsedMessage.state === 'ON' ? true : false
+    } else if (parsedMessage.contact) {
+        return !parsedMessage.contact
+    } else if (parsedMessage.occupancy) {
+        return parsedMessage.occupancy
+    }
+}
+
 function onHandleMessage(message: Message) {
     const parsedMessage = JSON.parse(message.payloadString) as ParsedMessage
     if (RA.isNilOrEmpty(parsedMessage)) {
         return
     }
-    const state = parsedMessage.state
-        ? parsedMessage.state === 'ON'
-            ? true
-            : false
-        : !parsedMessage.contact
-    useMqttStore.getState().updateDeviceStatus(message.destinationName, state)
+    useMqttStore
+        .getState()
+        .updateDeviceStatus(
+            message.destinationName,
+            determineState(parsedMessage)
+        )
 }
 
 function onConnectionLost(responseObject: MQTTError) {

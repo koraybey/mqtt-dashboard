@@ -1,15 +1,18 @@
 import '@/theme/index.css'
+import '@/theme/app.css'
 
 import React from 'react'
 import ReactDOM from 'react-dom/client'
+
+import { ThemeProvider } from '@/theme/theme_provider'
 
 import { Dashboard } from './pages/Dashboard'
 
 const App = () => {
     return (
-        <div className={'content'}>
+        <ThemeProvider defaultTheme={'dark'} storageKey={'vite-ui-theme'}>
             <Dashboard />
-        </div>
+        </ThemeProvider>
     )
 }
 

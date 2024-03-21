@@ -25,12 +25,9 @@ export const Video: React.FC = () => {
             muted
             playsInline
             ref={videoReference}
-            style={{
-                height: '100%',
-                width: '100%',
-                objectFit: 'cover',
-                borderRadius: 8,
-            }}
+            className={
+                'w-full h-full border rounded-lg bg-zinc-950 dark:bg-zinc-900 object-cover'
+            }
         ></video>
     )
 }

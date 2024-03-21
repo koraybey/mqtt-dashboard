@@ -41,18 +41,7 @@ export interface PlugExposes extends SharedExposes {
 export type ParsedMessage = {
     state?: StringState
     contact?: boolean
-}
-
-export type LogMessage = {
-    topic: string
-    payload: string
-    date: number
-}
-
-export type DeviceList = {
-    topic: string
-    payload: string
-    date: number
+    occupancy?: boolean
 }
 
 export type Exposes = ContactExposes | PlugExposes | MotionExposes
