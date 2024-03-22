@@ -81,7 +81,7 @@ const determineState = (parsedMessage: ParsedMessage) => {
     if (parsedMessage.state) {
         return parsedMessage.state === 'ON' ? true : false
     } else if (parsedMessage.contact) {
-        return !parsedMessage.contact
+        return parsedMessage.contact
     } else if (parsedMessage.occupancy) {
         return parsedMessage.occupancy
     }

@@ -2,8 +2,45 @@ import { animated, useSpring } from '@react-spring/web'
 import * as R from 'ramda'
 import { useCallback, useEffect } from 'react'
 
-import { colors } from '@/theme/colors'
 import { mqttPublish, useMqttStore, useMqttSubscribe } from '@/utils/mqtt'
+
+const deviceColors: { [key: string]: { on: string; off: string } } = {
+    sensor: {
+        on: '#d8a200',
+        off: 'transparent',
+    },
+    contact: {
+        on: 'transparent',
+        off: '#d8a200',
+    },
+    plug: {
+        on: '#d8a200',
+        off: 'transparent',
+    },
+    switch: {
+        on: '#d8a200',
+        off: 'transparent',
+    },
+}
+
+const deviceIcons: { [key: string]: { on: string; off: string } } = {
+    sensor: {
+        on: 'iconoir-running',
+        off: 'iconoir-running',
+    },
+    contact: {
+        on: 'iconoir-contactless',
+        off: 'iconoir-contactless',
+    },
+    plug: {
+        on: 'iconoir-plug-type-c',
+        off: 'iconoir-plug-type-c',
+    },
+    switch: {
+        on: 'iconoir-light-bulb-on',
+        off: 'iconoir-light-bulb-off',
+    },
+}
 
 export const MqttControl = ({
     topic,
@@ -28,9 +65,9 @@ export const MqttControl = ({
 
     useEffect(() => {
         void api.start({
-            bg: deviceStatus ? '#d8a200' : 'transparent',
+            bg: deviceStatus ? deviceColors[type].on : deviceColors[type].off,
         })
-    }, [api, deviceStatus, topic])
+    }, [api, deviceStatus, topic, type])
 
     return (
         <div
@@ -61,7 +98,18 @@ export const MqttControl = ({
                 >
                     {name}
                 </h3>
-                <Icon type={type} deviceStatus={deviceStatus as boolean} />
+                <i
+                    className={
+                        deviceStatus
+                            ? deviceIcons[type].on
+                            : deviceIcons[type].off
+                    }
+                    style={{
+                        strokeWidth: 1.5,
+                        fontSize: 24,
+                        alignSelf: 'flex-end',
+                    }}
+                />
             </div>
             <animated.button
                 onClick={handleClick}
@@ -75,68 +123,4 @@ export const MqttControl = ({
             ></animated.button>
         </div>
     )
-}
-
-//! TODO Refactor
-const Icon = ({
-    type,
-    deviceStatus,
-}: {
-    type: string
-    deviceStatus: boolean
-}) => {
-    switch (type) {
-        case 'sensor': {
-            return (
-                <i
-                    className={'iconoir-contactless'}
-                    style={{
-                        fontSize: 24,
-                        color: deviceStatus ? 'white' : colors.shade[13],
-                        alignSelf: 'flex-end',
-                    }}
-                />
-            )
-        }
-        case 'contact': {
-            return (
-                <i
-                    className={'iconoir-contactless'}
-                    style={{
-                        fontSize: 24,
-                        color: deviceStatus ? 'white' : colors.shade[13],
-                        alignSelf: 'flex-end',
-                    }}
-                />
-            )
-        }
-        case 'switch': {
-            return (
-                <i
-                    className={
-                        deviceStatus
-                            ? 'iconoir-light-bulb-on'
-                            : 'iconoir-light-bulb-off'
-                    }
-                    style={{
-                        fontSize: 24,
-                        color: deviceStatus ? 'white' : colors.shade[13],
-                        alignSelf: 'flex-end',
-                    }}
-                />
-            )
-        }
-        case 'plug': {
-            return (
-                <i
-                    className={'iconoir-plug-type-c'}
-                    style={{
-                        fontSize: 24,
-                        color: deviceStatus ? 'white' : colors.shade[13],
-                        alignSelf: 'flex-end',
-                    }}
-                />
-            )
-        }
-    }
 }

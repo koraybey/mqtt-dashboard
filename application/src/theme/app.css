@@ -2,4 +2,6 @@
     font-family: 'Space Grotesk', sans-serif, system-ui, Avenir, Helvetica,
         Arial, sans-serif;
     font-optical-sizing: auto;
+    -webkit-font-smoothing: auto;
+    -moz-osx-font-smoothing: auto;
 }
