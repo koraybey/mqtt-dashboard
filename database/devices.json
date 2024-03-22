@@ -11,19 +11,19 @@
     },
     {
       "topic": "zigbee2mqtt/0_contact_door",
-      "alias": "Ground Floor Door",
+      "alias": "Ground Door",
       "device_type": "contact",
       "qos": 1
     },
     {
       "topic": "zigbee2mqtt/0_contact_balcony",
-      "alias": "Ground Floor Balcony Door",
+      "alias": "Ground Balcony Door",
       "device_type": "contact",
       "qos": 1
     },
     {
       "topic": "zigbee2mqtt/1_contact_balcony",
-      "alias": "Upper Floor Balcony Door",
+      "alias": "Upper Balcony Door",
       "device_type": "contact",
       "qos": 1
     },
@@ -53,7 +53,7 @@
     },
     {
       "topic": "zigbee2mqtt/0_motion_salotto",
-      "alias": "Ground Floor Motion",
+      "alias": "Ground Motion",
       "device_type": "sensor",
       "qos": 1
     }

@@ -706,10 +706,10 @@ version = "2.1.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "03fc05c17098f21b89bc7d98fe1dd3cce2c11c2ad8e145f2a44fe08ed28eb559"
 dependencies = [
- "chrono",
  "diesel_derives",
  "libsqlite3-sys",
  "r2d2",
+ "serde_json",
  "time",
 ]
 
@@ -1285,7 +1285,6 @@ dependencies = [
  "actix-cors",
  "actix-web",
  "actix-web-lab",
- "chrono",
  "diesel",
  "dotenv",
  "env_logger",

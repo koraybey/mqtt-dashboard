@@ -1,32 +1,25 @@
 use diesel::prelude::*;
 use diesel::r2d2::ConnectionManager;
 use diesel::r2d2::Pool;
-use mqtt_sqlite::database::*;
-use mqtt_sqlite::models::*;
+use mqtt_sqlite::database::get_connection_pool;
+use mqtt_sqlite::models::Devices;
+use mqtt_sqlite::models::NewLogMessage;
 use mqtt_sqlite::schema::*;
 
 use paho_mqtt::{Client, ConnectOptionsBuilder, Message};
+use std::fs;
 use std::{process, thread, time::Duration};
-
-const BROKER: &str = "ws://10.147.17.93:1881";
-const TOPICS: &[&str] = &[
-    "zigbee2mqtt/0_contact_fridge",
-    "zigbee2mqtt/0_contact_door",
-    "zigbee2mqtt/0_contact_balcony",
-    "zigbee2mqtt/1_contact_balcony",
-    "zigbee2mqtt/0_plug_studio",
-    "zigbee2mqtt/0_plug_camera",
-    "zigbee2mqtt/0_plug_alarm",
-    "zigbee2mqtt/0_light_studio",
-    "zigbee2mqtt/0_motion_salotto",
-];
-const TOPICS_QOS: &[i32] = &[1, 1, 1, 1, 1, 1, 1, 1, 1];
 
 fn main() {
     let pool: Pool<ConnectionManager<SqliteConnection>> = get_connection_pool();
     let connection: &mut SqliteConnection = &mut pool.get().unwrap();
 
-    let cli = Client::new(BROKER).unwrap_or_else(|err| {
+    let data = fs::read_to_string("devices.json").expect("Unable to read file");
+    let devices: Devices =
+        serde_json::from_str(&data).expect("Unable to read device configuration");
+    let broker = format!("{}://{}:{}", devices.protocol, devices.host, devices.port);
+
+    let cli = Client::new(broker).unwrap_or_else(|err| {
         println!("Error creating the client: {:?}", err);
         process::exit(1);
     });
@@ -39,7 +32,7 @@ fn main() {
     match cli.connect(conn_opts) {
         Ok(_) => {
             println!("Connected to MQTT broker.");
-            subscribe(&cli);
+            subscribe(&cli, &devices);
         }
         Err(e) => {
             println!("Unable to connect:\n\t{:?}", e);
@@ -57,7 +50,7 @@ fn main() {
             None if !cli.is_connected() => {
                 if reconnect(&cli) {
                     println!("Resubscribing after reconnection...");
-                    subscribe(&cli);
+                    subscribe(&cli, &devices);
                 } else {
                     break;
                 }
@@ -93,9 +86,17 @@ fn reconnect(cli: &Client) -> bool {
     false
 }
 
-fn subscribe(cli: &Client) {
-    match cli.subscribe_many(TOPICS, TOPICS_QOS) {
-        Ok(_) => println!("Successfully subscribed to {:?}", TOPICS),
+fn subscribe(cli: &Client, devices: &Devices) {
+    let mut topics: Vec<String> = vec![];
+    let mut topics_qos: Vec<i32> = vec![];
+
+    for device in &devices.devices {
+        topics.push(device.topic.clone());
+        topics_qos.push(device.qos);
+    }
+
+    match cli.subscribe_many(&topics, &topics_qos) {
+        Ok(_) => println!("Successfully subscribed to {:?}", topics),
         Err(e) => {
             eprintln!("Error subscribing to topic: {:?}", e);
             process::exit(1);
@@ -103,15 +104,28 @@ fn subscribe(cli: &Client) {
     }
 }
 
-pub fn create_message(connection: &mut SqliteConnection, message: Message) {
-    println!("{}", message);
+fn create_message(connection: &mut SqliteConnection, message: Message) {
+    let binding = message.payload_str();
+    let v: NewLogMessage = serde_json::from_str(&binding).unwrap();
 
     let new_message = NewLogMessage {
-        topic: message.topic(),
-        payload: &message.payload_str(),
+        friendly_name: Some(message.topic()),
+        current: v.current,
+        energy: v.energy,
+        power: v.power,
+        last_seen: v.last_seen,
+        voltage: v.voltage,
+        linkquality: v.linkquality,
+        state: v.state,
+        contact: v.contact,
+        occupancy: v.occupancy,
+        battery: v.battery,
+        illuminance: v.illuminance,
+        device_temperature: v.device_temperature,
+        power_outage_count: v.power_outage_count,
     };
 
-    diesel::insert_into(devices::table)
+    diesel::insert_into(logs::table)
         .values(&new_message)
         .execute(connection)
         .expect("Error saving the message");

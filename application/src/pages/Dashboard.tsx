@@ -1,12 +1,14 @@
+import * as R from 'ramda'
 import styled from 'styled-components'
 import useSWR from 'swr'
 
 import { MqttControl, Video } from '@/components/other'
 import { MqttLogs } from '@/components/other/MqttLogs'
-import { deviceFetcher } from '@/utils/api'
+import type { DeviceInfo } from '@/generated/gql/graphql'
+import { fetcher } from '@/utils/api'
 
 export const Dashboard = () => {
-    const { data, isLoading } = useSWR(
+    const { data, isLoading } = useSWR<{ devices: DeviceInfo[] }>(
         `{
             devices {
               topic
@@ -15,8 +17,10 @@ export const Dashboard = () => {
               qos
             }
           }`,
-        deviceFetcher
+        fetcher
     )
+
+    if (isLoading || !data) return null
 
     return (
         <MainContainer className={'container'}>
@@ -27,41 +31,11 @@ export const Dashboard = () => {
                 <Card>
                     <MqttLogs />
                 </Card>
-                {/* <Card>
-                    <CardHeader>
-                        <CardHeaderInformation>
-                            <h2>Link quality</h2>
-                            <p style={{ color: colors.shade[4] }}>
-                                Device signal strength measured in LQI
-                            </p>
-                        </CardHeaderInformation>
-                    </CardHeader>
-                    <ChartContainer>
-                        {!log.data || log.isLoading || log.error ? null : (
-                            <Area data={log.data} />
-                        )}
-                    </ChartContainer>
-                </Card>
-                <Card>
-                    <CardHeader>
-                        <CardHeaderInformation>
-                            <h2>Voltage</h2>
-                            <p style={{ color: colors.shade[4] }}>
-                                Measured electrical potential value in Volt
-                            </p>
-                        </CardHeaderInformation>
-                    </CardHeader>
-                    <ChartContainer>
-                        {!log.data || log.isLoading || log.error ? null : (
-                            <Line data={log.data} />
-                        )}
-                    </ChartContainer>
-                </Card> */}
             </DashboardContainer>
             <SwitchContainer>
                 {!data || isLoading
                     ? null
-                    : data.devices.map((device) => (
+                    : R.prop('devices', data).map((device) => (
                           <MqttControl
                               key={device.topic}
                               topic={device.topic}

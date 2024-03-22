@@ -4,26 +4,39 @@ import { xt256 } from 'react-syntax-highlighter/dist/esm/styles/hljs'
 
 SyntaxHighlighter.registerLanguage('json', json)
 
+import * as R from 'ramda'
 import { memo } from 'react'
 import styled from 'styled-components'
 import useSWR from 'swr'
 
 import type { LogMessage } from '@/generated/gql/graphql'
 import { colors } from '@/theme/colors'
-import { logFetcher } from '@/utils/api'
+import { fetcher } from '@/utils/api'
 
-import { unixTimeToHumanReadable } from '../charts/helpers'
+import { isoToHumanReadable } from '../charts/helpers'
 
 export const MqttLogs = () => {
-    const { data, isLoading } = useSWR(
+    const { data, isLoading } = useSWR<{ logs: LogMessage[] }>(
         `{
             logs {
-              topic
-              payload
-              date
+              friendlyName
+              current
+              energy
+              power
+              lastSeen
+              voltage
+              linkquality
+              state
+              contact
+              occupancy
+              battery
+              illuminance
+              deviceTemperature
+              powerOutageCount
+              timestamp
             }
           }`,
-        logFetcher
+        fetcher
     )
 
     if (isLoading || !data) return null
@@ -32,7 +45,7 @@ export const MqttLogs = () => {
         <MqttLogsContainer
             className={'rounded-lg border bg-zinc-950 dark:bg-zinc-900'}
         >
-            {data.logs.map((log, index) => (
+            {R.prop('logs', data).map((log, index) => (
                 <MqttLogsMessage data={log} key={index} />
             ))}
         </MqttLogsContainer>
@@ -62,28 +75,42 @@ export const MqttLogsMessage = memo(({ data }: { data: LogMessage }) => (
                 color: colors.shade[8],
                 marginRight: 12,
                 display: 'flex',
-                gap: 12,
                 flexDirection: 'column',
                 alignItems: 'start',
+                flexShrink: 0,
+                width: 96,
                 justifyContent: 'space-between',
+                gap: 4,
             }}
         >
             <span
                 style={{
-                    width: 96,
                     whiteSpace: 'nowrap',
-                    overflow: 'hidden',
                     textOverflow: 'ellipsis',
+                    overflow: 'hidden',
+                    width: 96,
                 }}
             >
-                {data.topic.replace('zigbee2mqtt/', '')}
+                {data.friendlyName?.replace('zigbee2mqtt/', '')}
             </span>
-            <span>{unixTimeToHumanReadable(data.date as number)}</span>
+            <span
+                style={{
+                    whiteSpace: 'nowrap',
+                    textOverflow: 'ellipsis',
+                    overflow: 'hidden',
+                    width: 96,
+                }}
+            >
+                {isoToHumanReadable(data.timestamp)}
+            </span>
         </div>
         <SyntaxHighlighter
             language={'json'}
             style={xt256}
-            wrapLongLines
+            wrapLines
+            lineProps={{
+                style: { wordBreak: 'break-all', whiteSpace: 'pre-wrap' },
+            }}
             customStyle={{
                 fontSize: 13,
                 lineHeight: 1.6,
@@ -92,7 +119,7 @@ export const MqttLogsMessage = memo(({ data }: { data: LogMessage }) => (
                 overflow: 'hidden',
             }}
         >
-            {data.payload}
+            {JSON.stringify(data, null, 0)}
         </SyntaxHighlighter>
     </div>
 ))

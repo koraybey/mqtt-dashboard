@@ -1,7 +1,7 @@
 use crate::models::DeviceInfo;
 use crate::models::Devices;
 use crate::models::LogMessage;
-use crate::schema::devices::dsl::*;
+use crate::schema::logs::dsl::*;
 use diesel::prelude::*;
 use diesel::SqliteConnection;
 use juniper::{
@@ -22,7 +22,7 @@ pub struct DevicesQuery;
 impl Query {
     fn logs(context: &GraphQLContext) -> FieldResult<Vec<LogMessage>> {
         let connection: &mut SqliteConnection = &mut context.pool.get().unwrap();
-        let res = devices.order(id.desc()).limit(50).load(connection);
+        let res = logs.order(id.desc()).limit(50).load(connection);
         handle_graphql_res(res)
     }
     fn devices() -> Vec<DeviceInfo> {
