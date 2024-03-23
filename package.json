@@ -13,7 +13,6 @@
     "database": "pnpm --filter database",
     "server": "pnpm --filter server",
     "prepare": "husky",
-    "lint": "eslint",
     "start": "pm2 start",
     "shutdown": "pm2 stop all",
     "kill": "pm2 kill",
