@@ -1,4 +1,3 @@
-/* eslint-disable unicorn/prefer-module */
 /** @type {import('tailwindcss').Config} */
 export default {
     darkMode: ['class'],
@@ -52,6 +51,7 @@ export default {
                     DEFAULT: 'hsl(var(--card))',
                     foreground: 'hsl(var(--card-foreground))',
                 },
+                backgroundOpacity: ['active'],
             },
             borderRadius: {
                 lg: 'var(--radius)',
@@ -74,5 +74,6 @@ export default {
             },
         },
     },
+    // eslint-disable-next-line unicorn/prefer-module
     plugins: [require('tailwindcss-animate')],
 }

@@ -1,44 +1,33 @@
 import { animated, useSpring } from '@react-spring/web'
+import type dynamicIconImports from 'lucide-react/dynamicIconImports'
 import * as R from 'ramda'
 import { useCallback, useEffect } from 'react'
 
+import { Icon } from '@/components/ui/icon'
+import { Switch } from '@/components/ui/switch'
 import { mqttPublish, useMqttStore, useMqttSubscribe } from '@/utils/mqtt'
 
-const deviceColors: { [key: string]: { on: string; off: string } } = {
+const deviceIcons: {
+    [key: string]: {
+        on: keyof typeof dynamicIconImports
+        off: keyof typeof dynamicIconImports
+    }
+} = {
     sensor: {
-        on: '#d8a200',
-        off: 'transparent',
+        on: 'radar',
+        off: 'radar',
     },
     contact: {
-        on: 'transparent',
-        off: '#d8a200',
+        on: 'door-open',
+        off: 'door-closed',
     },
     plug: {
-        on: '#d8a200',
-        off: 'transparent',
+        on: 'plug-zap',
+        off: 'plug',
     },
     switch: {
-        on: '#d8a200',
-        off: 'transparent',
-    },
-}
-
-const deviceIcons: { [key: string]: { on: string; off: string } } = {
-    sensor: {
-        on: 'iconoir-running',
-        off: 'iconoir-running',
-    },
-    contact: {
-        on: 'iconoir-contactless',
-        off: 'iconoir-contactless',
-    },
-    plug: {
-        on: 'iconoir-plug-type-c',
-        off: 'iconoir-plug-type-c',
-    },
-    switch: {
-        on: 'iconoir-light-bulb-on',
-        off: 'iconoir-light-bulb-off',
+        on: 'flashlight',
+        off: 'flashlight-off',
     },
 }
 
@@ -54,10 +43,12 @@ export const MqttControl = ({
         R.path([topic, 'status'])(state.deviceStatus)
     )
     const handleClick = useCallback(() => {
-        if (type === ('sensor' || 'contact')) return
+        if (type === 'sensor' || type === 'contact') return
         const payload = { state: deviceStatus ? 'OFF' : 'ON' }
         mqttPublish(`${topic}/set`, JSON.stringify(payload))
     }, [deviceStatus, topic, type])
+
+    const icon = deviceStatus ? deviceIcons[type].on : deviceIcons[type].off
 
     const [background, api] = useSpring(() => ({
         bg: 'transparent',
@@ -65,16 +56,18 @@ export const MqttControl = ({
 
     useEffect(() => {
         void api.start({
-            bg: deviceStatus ? deviceColors[type].on : deviceColors[type].off,
+            bg: deviceStatus ? '#b47d00' : 'transparent',
         })
     }, [api, deviceStatus, topic, type])
 
     return (
         <div
-            className={'rounded-lg border bg-zinc-950 dark:bg-zinc-900'}
+            className={
+                'rounded-lg border dark:bg-zinc-950 dark:hover:bg-zinc-900 duration-200 transition hover:-translate-y-1 hover:scale-101'
+            }
             style={{
                 position: 'relative',
-                minHeight: 150,
+                minHeight: 180,
             }}
         >
             <div
@@ -91,28 +84,28 @@ export const MqttControl = ({
                     pointerEvents: 'none',
                 }}
             >
-                <h3
-                    className={
-                        'scroll-m-20 text-xl font-semibold tracking-tight'
-                    }
-                >
+                <h3 className={'text-xl font-semibold tracking-wide'}>
                     {name}
                 </h3>
-                <i
-                    className={
-                        deviceStatus
-                            ? deviceIcons[type].on
-                            : deviceIcons[type].off
-                    }
-                    style={{
-                        strokeWidth: 1.5,
-                        fontSize: 24,
-                        alignSelf: 'flex-end',
-                    }}
-                />
+                <div className={'flex justify-between items-center'}>
+                    {type === 'switch' || type === 'plug' ? (
+                        <Switch checked={deviceStatus as boolean} />
+                    ) : null}
+                    <Icon
+                        size={32}
+                        className={`ml-auto ${
+                            deviceStatus
+                                ? 'dark:text-white'
+                                : 'dark:text-zinc-700'
+                        }`}
+                        strokeWidth={1}
+                        name={icon}
+                    />
+                </div>
             </div>
             <animated.button
                 onClick={handleClick}
+                className={'focus-visible:outline-none'}
                 style={{
                     backgroundColor: background.bg,
                     width: '100%',

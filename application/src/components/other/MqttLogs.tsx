@@ -10,7 +10,6 @@ import styled from 'styled-components'
 import useSWR from 'swr'
 
 import type { LogMessage } from '@/generated/gql/graphql'
-import { colors } from '@/theme/colors'
 import { fetcher } from '@/utils/api'
 
 import { isoToHumanReadable } from '../charts/helpers'
@@ -42,9 +41,7 @@ export const MqttLogs = () => {
     if (isLoading || !data) return null
 
     return (
-        <MqttLogsContainer
-            className={'rounded-lg border bg-zinc-950 dark:bg-zinc-900'}
-        >
+        <MqttLogsContainer className={'rounded-lg border dark:bg-zinc-950'}>
             {R.prop('logs', data).map((log, index) => (
                 <MqttLogsMessage data={log} key={index} />
             ))}
@@ -54,7 +51,7 @@ export const MqttLogs = () => {
 
 const MqttLogsContainer = styled.div`
     height: 100%;
-    padding: 12px;
+    padding: 16px;
     justify-content: space-between;
     position: relative;
     overflow: auto;
@@ -66,40 +63,25 @@ export const MqttLogsMessage = memo(({ data }: { data: LogMessage }) => (
             display: 'flex',
             flexDirection: 'row',
             alignItems: 'start',
-            paddingBottom: 12,
+            paddingBottom: 16,
         }}
     >
         <div
             style={{
                 fontSize: 13,
-                color: colors.shade[8],
-                marginRight: 12,
+                marginRight: 16,
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'start',
                 flexShrink: 0,
-                width: 96,
                 justifyContent: 'space-between',
                 gap: 4,
             }}
         >
             <span
-                style={{
-                    whiteSpace: 'nowrap',
-                    textOverflow: 'ellipsis',
-                    overflow: 'hidden',
-                    width: 96,
-                }}
-            >
-                {data.friendlyName?.replace('zigbee2mqtt/', '')}
-            </span>
-            <span
-                style={{
-                    whiteSpace: 'nowrap',
-                    textOverflow: 'ellipsis',
-                    overflow: 'hidden',
-                    width: 96,
-                }}
+                className={
+                    'whitespace-nowrap overflow-ellipsis tracking-wide dark:text-zinc-500'
+                }
             >
                 {isoToHumanReadable(data.timestamp)}
             </span>

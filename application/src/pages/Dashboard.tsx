@@ -84,7 +84,7 @@ const MainContainer = styled.div`
     position: relative;
     padding: 32px;
     display: flex;
-    gap: 12px;
+    gap: 16px;
     flex-direction: column;
     @media (max-width: 600px) {
         padding: 16px;
@@ -95,7 +95,7 @@ const SwitchContainer = styled.div`
     position: relative;
     display: grid;
     grid-template-columns: repeat(5, 1fr);
-    grid-gap: 12px;
+    grid-gap: 16px;
     @media (max-width: 600px) {
         grid-template-columns: repeat(3, 1fr);
     }
@@ -106,7 +106,7 @@ const DashboardContainer = styled.div`
     display: grid;
     grid-column-start: auto;
     grid-template-columns: repeat(2, 1fr);
-    grid-gap: 12px;
+    grid-gap: 16px;
     height: 400px;
     @media (max-width: 600px) {
         grid-template-columns: repeat(1, 1fr);

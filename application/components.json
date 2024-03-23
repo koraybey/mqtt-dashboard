@@ -6,7 +6,7 @@
     "tailwind": {
         "config": "tailwind.config.js",
         "css": "src/theme/index.css",
-        "baseColor": "stone",
+        "baseColor": "zinc",
         "cssVariables": true,
         "prefix": ""
     },

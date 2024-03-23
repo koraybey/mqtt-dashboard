@@ -26,7 +26,7 @@ export const Video: React.FC = () => {
             playsInline
             ref={videoReference}
             className={
-                'w-full h-full border rounded-lg bg-zinc-950 dark:bg-zinc-900 object-cover'
+                'w-full h-full border rounded-lg dark:bg-zinc-950 object-cover'
             }
         ></video>
     )
