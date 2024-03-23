@@ -1,6 +1,5 @@
 import type { Message, MQTTError } from 'paho-mqtt'
 import Paho from 'paho-mqtt'
-import * as RA from 'ramda-adjunct'
 import { useEffect } from 'react'
 import { create } from 'zustand'
 import { createJSONStorage, devtools, persist } from 'zustand/middleware'
@@ -59,7 +58,7 @@ client.connect({
     onFailure: () => {
         throw new Error('Cannot connect to MQTT Broker.')
     },
-    keepAliveInterval: 120,
+    keepAliveInterval: 30,
     reconnect: true,
 })
 
@@ -67,7 +66,7 @@ export function useMqttSubscribe(topic: string) {
     const isConnected = useMqttStore((state) => state.isConnected)
     useEffect(() => {
         if (!isConnected) return
-        client.subscribe(topic, { qos: 1 })
+        client.subscribe(topic)
     }, [topic, isConnected])
 }
 
@@ -77,26 +76,31 @@ export function mqttPublish(topic: string, payload: string) {
     client.send(message)
 }
 
-const determineState = (parsedMessage: ParsedMessage) => {
-    if (parsedMessage.state) {
-        return parsedMessage.state === 'ON' ? true : false
-    } else if (parsedMessage.contact) {
-        return !parsedMessage.contact
-    } else if (parsedMessage.occupancy) {
-        return parsedMessage.occupancy
+const determineState = (parsedMessage: ParsedMessage, topic: string) => {
+    // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
+    switch (true) {
+        case topic.includes('plug'): {
+            return parsedMessage.state === 'ON' ? true : false
+        }
+        case topic.includes('light'): {
+            return parsedMessage.state === 'ON' ? true : false
+        }
+        case topic.includes('contact'): {
+            return !parsedMessage.contact
+        }
+        case topic.includes('motion'): {
+            return parsedMessage.occupancy
+        }
     }
 }
 
 function onHandleMessage(message: Message) {
     const parsedMessage = JSON.parse(message.payloadString) as ParsedMessage
-    if (RA.isNilOrEmpty(parsedMessage)) {
-        return
-    }
     useMqttStore
         .getState()
         .updateDeviceStatus(
             message.destinationName,
-            determineState(parsedMessage)
+            determineState(parsedMessage, message.destinationName)
         )
 }
 

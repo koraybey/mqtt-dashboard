@@ -7,6 +7,25 @@ import { Icon } from '@/components/ui/icon'
 import { Switch } from '@/components/ui/switch'
 import { mqttPublish, useMqttStore, useMqttSubscribe } from '@/utils/mqtt'
 
+const deviceColors: { [key: string]: { on: string; off: string } } = {
+    sensor: {
+        on: '#d8a200',
+        off: 'transparent',
+    },
+    contact: {
+        on: '#d8a200',
+        off: 'transparent',
+    },
+    plug: {
+        on: '#d8a200',
+        off: 'transparent',
+    },
+    switch: {
+        on: '#d8a200',
+        off: 'transparent',
+    },
+}
+
 const deviceIcons: {
     [key: string]: {
         on: keyof typeof dynamicIconImports
@@ -51,12 +70,12 @@ export const MqttControl = ({
     const icon = deviceStatus ? deviceIcons[type].on : deviceIcons[type].off
 
     const [background, api] = useSpring(() => ({
-        bg: 'transparent',
+        bg: deviceColors[type].off,
     }))
 
     useEffect(() => {
         void api.start({
-            bg: deviceStatus ? '#b47d00' : 'transparent',
+            bg: deviceStatus ? deviceColors[type].on : deviceColors[type].off,
         })
     }, [api, deviceStatus, topic, type])
 
