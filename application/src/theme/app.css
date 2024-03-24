@@ -1,11 +1,33 @@
+* {
+    scrollbar-width: thin;
+    scrollbar-color: #272727 transparent;
+}
+
+video {
+    object-fit: cover;
+}
+
 :root {
     font-family: 'Space Grotesk', sans-serif, system-ui, Avenir, Helvetica,
         Arial, sans-serif;
     font-optical-sizing: auto;
     -webkit-font-smoothing: auto;
     -moz-osx-font-smoothing: auto;
+    scrollbar-gutter: stable;
 }
 
-video {
-    object-fit: cover;
+.grid_container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    gap: 12px 12px;
+    padding: 32px;
+    grid-template-areas:
+        '. .'
+        'grid_container_full grid_container_full'
+        '. .';
+}
+
+.grid_container_full {
+    grid-area: grid_container_full;
 }

@@ -6,7 +6,6 @@ SyntaxHighlighter.registerLanguage('json', json)
 
 import * as R from 'ramda'
 import { memo } from 'react'
-import styled from 'styled-components'
 import useSWR from 'swr'
 
 import type { LogMessage } from '@/generated/gql/graphql'
@@ -40,22 +39,10 @@ export const MqttLogs = () => {
 
     if (isLoading || !data) return null
 
-    return (
-        <MqttLogsContainer className={'rounded-lg border dark:bg-zinc-950'}>
-            {R.prop('logs', data).map((log, index) => (
-                <MqttLogsMessage data={log} key={index} />
-            ))}
-        </MqttLogsContainer>
-    )
+    return R.prop('logs', data)
+        .slice(0, 20)
+        .map((log, index) => <MqttLogsMessage data={log} key={index} />)
 }
-
-const MqttLogsContainer = styled.div`
-    height: 100%;
-    padding: 16px;
-    justify-content: space-between;
-    position: relative;
-    overflow: auto;
-`
 
 export const MqttLogsMessage = memo(({ data }: { data: LogMessage }) => (
     <div
@@ -63,29 +50,17 @@ export const MqttLogsMessage = memo(({ data }: { data: LogMessage }) => (
             display: 'flex',
             flexDirection: 'row',
             alignItems: 'start',
-            paddingBottom: 16,
+            gap: 12,
+            fontSize: 14,
         }}
     >
-        <div
-            style={{
-                fontSize: 13,
-                marginRight: 16,
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'start',
-                flexShrink: 0,
-                justifyContent: 'space-between',
-                gap: 4,
-            }}
+        <span
+            className={
+                'whitespace-nowrap overflow-ellipsis tracking-wide dark:text-zinc-400'
+            }
         >
-            <span
-                className={
-                    'whitespace-nowrap overflow-ellipsis tracking-wide dark:text-zinc-500'
-                }
-            >
-                {isoToHumanReadable(data.timestamp)}
-            </span>
-        </div>
+            {isoToHumanReadable(data.timestamp)}
+        </span>
         <SyntaxHighlighter
             language={'json'}
             style={xt256}
@@ -95,7 +70,7 @@ export const MqttLogsMessage = memo(({ data }: { data: LogMessage }) => (
             }}
             customStyle={{
                 fontSize: 13,
-                lineHeight: 1.6,
+                lineHeight: 1.8,
                 padding: 0,
                 backgroundColor: 'transparent',
                 overflow: 'hidden',

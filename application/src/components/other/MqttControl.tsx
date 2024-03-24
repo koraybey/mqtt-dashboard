@@ -7,6 +7,8 @@ import { Icon } from '@/components/ui/icon'
 import { Switch } from '@/components/ui/switch'
 import { mqttPublish, useMqttStore, useMqttSubscribe } from '@/utils/mqtt'
 
+import { Card } from '../ui/card'
+
 const deviceColors: { [key: string]: { on: string; off: string } } = {
     sensor: {
         on: '#d8a200',
@@ -80,59 +82,33 @@ export const MqttControl = ({
     }, [api, deviceStatus, topic, type])
 
     return (
-        <div
-            className={
-                'rounded-lg border dark:bg-zinc-950 dark:hover:bg-zinc-900 duration-200 transition hover:-translate-y-1 hover:scale-101'
-            }
-            style={{
-                position: 'relative',
-                minHeight: 180,
-            }}
-        >
-            <div
+        <Card className={'h-48'}>
+            <animated.button
+                onClick={handleClick}
+                className={
+                    'flex flex-col justify-between content-start p-4 w-full h-full focus-visible:outline-none'
+                }
                 style={{
-                    position: 'absolute',
-                    padding: '16px',
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    flexDirection: 'column',
-                    top: 0,
-                    right: 0,
-                    bottom: 0,
-                    left: 0,
-                    pointerEvents: 'none',
+                    backgroundColor: background.bg,
                 }}
             >
-                <h3 className={'text-xl font-semibold tracking-wide'}>
+                <h3 className={'text-xl font-semibold tracking-wide text-left'}>
                     {name}
                 </h3>
-                <div className={'flex justify-between items-center'}>
+                <div className={'flex w-full justify-between items-center'}>
                     {type === 'switch' || type === 'plug' ? (
                         <Switch checked={deviceStatus as boolean} />
                     ) : null}
                     <Icon
                         size={32}
                         className={`ml-auto ${
-                            deviceStatus
-                                ? 'dark:text-white'
-                                : 'dark:text-zinc-700'
+                            deviceStatus ? 'text-white' : 'text-zinc-700'
                         }`}
                         strokeWidth={1}
                         name={icon}
                     />
                 </div>
-            </div>
-            <animated.button
-                onClick={handleClick}
-                className={'focus-visible:outline-none'}
-                style={{
-                    backgroundColor: background.bg,
-                    width: '100%',
-                    height: '100%',
-                    borderRadius: 8,
-                    overflow: 'hidden',
-                }}
-            ></animated.button>
-        </div>
+            </animated.button>
+        </Card>
     )
 }

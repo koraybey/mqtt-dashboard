@@ -1,14 +1,18 @@
 import * as R from 'ramda'
-import styled from 'styled-components'
+import ReactPlayer from 'react-player/lazy'
 import useSWR from 'swr'
 
-import { MqttControl, Video } from '@/components/other'
+import { Line } from '@/components/charts'
+import { MqttControl } from '@/components/other'
 import { MqttLogs } from '@/components/other/MqttLogs'
-import type { DeviceInfo } from '@/generated/gql/graphql'
+import { Card, CardHeader } from '@/components/ui/card'
+import type { DeviceInfo, LogMessage } from '@/generated/gql/graphql'
 import { fetcher } from '@/utils/api'
 
 export const Dashboard = () => {
-    const { data, isLoading } = useSWR<{ devices: DeviceInfo[] }>(
+    const { data: deviceData, isLoading: isLoadingDeviceData } = useSWR<{
+        devices: DeviceInfo[]
+    }>(
         `{
             devices {
               topic
@@ -20,127 +24,78 @@ export const Dashboard = () => {
         fetcher
     )
 
-    if (isLoading || !data) return null
+    const { data: logData, isLoading: isLoadingLogData } = useSWR<{
+        logs: LogMessage[]
+    }>(
+        `{
+            logs {
+              friendlyName
+              current
+              energy
+              power
+              lastSeen
+              voltage
+              linkquality
+              state
+              contact
+              occupancy
+              battery
+              illuminance
+              deviceTemperature
+              powerOutageCount
+              timestamp
+            }
+          }`,
+        fetcher
+    )
 
     return (
-        <MainContainer className={'container'}>
-            <DashboardContainer>
-                <Card>
-                    <Video />
-                </Card>
-                <Card>
-                    <MqttLogs />
-                </Card>
-            </DashboardContainer>
-            <SwitchContainer>
-                {!data || isLoading
+        <div className={'container grid_container'}>
+            <Card className={'h-[400px]'}>
+                <ReactPlayer
+                    playing
+                    stopOnUnmount
+                    muted
+                    width={'100%'}
+                    height={'100%'}
+                    playsinline
+                    url={
+                        'http://10.147.17.93:8083/stream/home/channel/0/hls/live/index.m3u8'
+                    }
+                />
+            </Card>
+            <Card className={'h-[400px] p-4'}>
+                <MqttLogs />
+            </Card>
+            <div className={'h-[400px] grid gap-2 grid-cols-4'}>
+                {isLoadingDeviceData || !deviceData
                     ? null
-                    : R.prop('devices', data).map((device) => (
-                          <MqttControl
-                              key={device.topic}
-                              topic={device.topic}
-                              name={device.alias}
-                              type={device.deviceType}
-                          />
-                      ))}
-            </SwitchContainer>
-            {/* <DashboardContainer>
-               <Card>
-                    <CardHeader>
-                        <CardHeaderInformation>
-                            <h2>Link quality</h2>
-                            <p style={{ color: colors.shade[4] }}>
-                                Device signal strength measured in LQI
-                            </p>
-                        </CardHeaderInformation>
-                    </CardHeader>
-                    <ChartContainer>
-                        {!log.data || log.isLoading || log.error ? null : (
-                            <Area data={log.data} />
-                        )}
-                    </ChartContainer>
-                </Card>
-                <Card>
-                    <CardHeader>
-                        <CardHeaderInformation>
-                            <h2>Voltage</h2>
-                            <p style={{ color: colors.shade[4] }}>
-                                Measured electrical potential value in Volt
-                            </p>
-                        </CardHeaderInformation>
-                    </CardHeader>
-                    <ChartContainer>
-                        {!log.data || log.isLoading || log.error ? null : (
-                            <Line data={log.data} />
-                        )}
-                    </ChartContainer>
-                </Card> 
-            </DashboardContainer> */}
-        </MainContainer>
+                    : R.prop('devices', deviceData)
+                          .slice(0, 8)
+                          .map((device) => (
+                              <MqttControl
+                                  key={device.topic}
+                                  topic={device.topic}
+                                  name={device.alias}
+                                  type={device.deviceType}
+                              />
+                          ))}
+            </div>
+            <Card className={'h-[400px] p-4'}>
+                <CardHeader>
+                    <h2 className={'text-3xl font-semibold tracking-wide'}>
+                        Link quality
+                    </h2>
+                    <p className={'text-zinc-400'}>
+                        Device signal strength measured in LQI
+                    </p>
+                </CardHeader>
+                <div className={'flex-auto flex-grow-1'}>
+                    {isLoadingLogData || !logData ? null : (
+                        <Line data={R.prop('logs', logData)} />
+                    )}
+                </div>
+            </Card>
+        </div>
     )
 }
-
-const MainContainer = styled.div`
-    position: relative;
-    padding: 32px;
-    display: flex;
-    gap: 16px;
-    flex-direction: column;
-    @media (max-width: 600px) {
-        padding: 16px;
-    }
-`
-
-const SwitchContainer = styled.div`
-    position: relative;
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    grid-gap: 16px;
-    @media (max-width: 600px) {
-        grid-template-columns: repeat(3, 1fr);
-    }
-`
-
-const DashboardContainer = styled.div`
-    position: relative;
-    display: grid;
-    grid-column-start: auto;
-    grid-template-columns: repeat(2, 1fr);
-    grid-gap: 16px;
-    height: 400px;
-    @media (max-width: 600px) {
-        grid-template-columns: repeat(1, 1fr);
-    }
-`
-
-const Card = styled.div`
-    position: relative;
-    border-radius: 8px;
-    overflow: hidden;
-    min-width: 320px;
-    @media (max-width: 600px) {
-    }
-`
-
-// const CardHeader = styled.div`
-//     position: relative;
-//     display: flex;
-//     flex-direction: row;
-//     align-items: center;
-//     justify-content: space-between;
-//     padding: 16px;
-// `
-
-// const CardHeaderInformation = styled.div`
-//     position: relative;
-//     display: flex;
-//     flex-direction: column;
-//     gap: 12px;
-// `
-
-// const ChartContainer = styled.div`
-//     height: 280px;
-//     @media (max-width: 600px) {
-//         height: 200px;
-//     }
-// `

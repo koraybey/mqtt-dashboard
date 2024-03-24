@@ -15,23 +15,21 @@ import {
     defaultChartMargin,
     gridColor,
 } from '@/components/charts/styles'
+import type { LogMessage } from '@/generated/gql/graphql'
 import { colors } from '@/theme/colors'
 import type { SharedChartProperties } from '@/types/components'
-import type { Exposes } from '@/types/exposes'
 
-import { createChartDate, filterByDeviceId, renameTimeToDate } from './helpers'
+import { filterByDeviceId } from './helpers'
 
-export const Line = ({ data: _data }: { data: Exposes[] }) => {
+export const Line = ({ data }: { data: LogMessage[] }) => {
     //! TODO Replace hard-coded values and map deviceNames dynamically
     //! TODO Refactor redundant calculations and reuse funcs to process data. What is happening below is expensive. However necessary as the server API for the demo is pretty basic.
-    const data = renameTimeToDate(_data)
-    const plugAlarm = filterByDeviceId(_data, '0_Plug_Alarm')
-    const plugCamera = filterByDeviceId(_data, '0_Plug_Camera')
-    const sensorDoor = filterByDeviceId(_data, '0_Door')
-    const measure = R.prop('voltage')
-    const calcMaxDomain =
-        ((max(plugCamera, measure) as unknown as number) || 0) + 1
-    const calcMinDomain = (min(plugCamera, measure) as unknown as number) || 0
+    const motion = filterByDeviceId(data, 'zigbee2mqtt/0_light_studio')
+    const plugAlarm = filterByDeviceId(data, 'zigbee2mqtt/0_plug_studio')
+    const plugCamera = filterByDeviceId(data, 'zigbee2mqtt/0_plug_camera')
+    const measure = R.prop('linkquality')
+    const calcMaxDomain = ((max(data, measure) as unknown as number) || 0) * 1.1
+    const calcMinDomain = (min(data, measure) as unknown as number) || 0
 
     return (
         <ParentSize>
@@ -46,21 +44,24 @@ export const Line = ({ data: _data }: { data: Exposes[] }) => {
                 //! TODO Hoist and memoize
                 const xScale = scaleTime({
                     range: [0, innerWidth],
-                    domain: extent(data, createChartDate) as unknown as [
-                        Date,
-                        Date,
-                    ],
+                    domain: extent(
+                        data,
+                        (d: { timestamp: string }) => new Date(d.timestamp)
+                    ) as unknown as [Date, Date],
                 })
 
                 //! TODO Hoist and memoize
                 const yScale = scaleLinear({
                     range: [innerHeight, 0],
                     domain: [calcMinDomain, calcMaxDomain],
+                    nice: true,
                 })
 
-                xScale
-
-                const getX = R.pipe(createChartDate, xScale) ?? 0
+                const getX =
+                    R.pipe(
+                        (d: { timestamp: string }) => new Date(d.timestamp),
+                        xScale
+                    ) ?? 0
                 const getY = R.pipe(measure, yScale) ?? 0
 
                 return (
@@ -100,7 +101,7 @@ export const Line = ({ data: _data }: { data: Exposes[] }) => {
                             */}
                             <LinePath
                                 curve={curveBasis}
-                                data={plugAlarm}
+                                data={plugCamera}
                                 x={getX}
                                 y={getY}
                                 strokeWidth={1.5}
@@ -108,7 +109,7 @@ export const Line = ({ data: _data }: { data: Exposes[] }) => {
                             />
                             <LinePath
                                 curve={curveBasis}
-                                data={plugCamera}
+                                data={motion}
                                 x={getX}
                                 y={getY}
                                 strokeWidth={1.5}
@@ -116,7 +117,7 @@ export const Line = ({ data: _data }: { data: Exposes[] }) => {
                             />
                             <LinePath
                                 curve={curveBasis}
-                                data={sensorDoor}
+                                data={plugAlarm}
                                 x={getX}
                                 y={getY}
                                 strokeWidth={1.5}

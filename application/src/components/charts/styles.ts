@@ -8,7 +8,7 @@ export const gridColor = colors.shade[3]
 export const tickStroke = colors.shade[9]
 const tickLabelColor = colors.shade[4]
 
-export const defaultChartMargin = { top: 24, right: 0, bottom: 24, left: 36 }
+export const defaultChartMargin = { top: 0, right: 0, bottom: 36, left: 24 }
 
 export const axisBottomTickLabel: TickLabelProps<
     NumberValue | StringLike | undefined
