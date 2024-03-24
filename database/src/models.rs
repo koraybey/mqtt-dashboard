@@ -1,8 +1,8 @@
 use crate::schema::*;
 use juniper::GraphQLObject;
-use serde::{Deserialize, Serialize};
+use serde::Deserialize;
 
-#[derive(GraphQLObject, serde::Deserialize)]
+#[derive(GraphQLObject, Deserialize)]
 pub struct DeviceInfo {
     pub topic: String,
     pub alias: String,
@@ -10,7 +10,7 @@ pub struct DeviceInfo {
     pub qos: i32,
 }
 
-#[derive(GraphQLObject, serde::Deserialize)]
+#[derive(GraphQLObject, Deserialize)]
 pub struct Devices {
     pub host: String,
     pub protocol: String,
@@ -18,7 +18,7 @@ pub struct Devices {
     pub devices: Vec<DeviceInfo>,
 }
 
-#[derive(Queryable, Selectable, Serialize, GraphQLObject, Debug)]
+#[derive(Queryable, Selectable, GraphQLObject)]
 #[diesel(table_name = logs)]
 #[diesel(check_for_backend(diesel::sqlite::Sqlite))]
 pub struct LogMessage {
@@ -41,17 +41,17 @@ pub struct LogMessage {
     pub timestamp: String,
 }
 
-#[derive(Insertable, Deserialize, Debug)]
+#[derive(Insertable, Deserialize)]
 #[diesel(table_name = logs)]
-pub struct NewLogMessage<'a> {
-    pub friendly_name: Option<&'a str>,
+pub struct NewLogMessage {
+    pub friendly_name: Option<String>,
     pub current: Option<f64>,
     pub energy: Option<f64>,
     pub power: Option<f64>,
-    pub last_seen: Option<&'a str>,
+    pub last_seen: Option<String>,
     pub voltage: Option<i32>,
     pub linkquality: Option<i32>,
-    pub state: Option<&'a str>,
+    pub state: Option<String>,
     pub contact: Option<bool>,
     pub occupancy: Option<bool>,
     pub battery: Option<i32>,

@@ -6,6 +6,6 @@
     "scripts": {
         "build": "cargo build --release",
         "start:logger": "cargo run --release --bin mqtt_logger",
-        "start:graphql": "cargo run --release --bin gql_server"
+        "start:server": "cargo run --release --bin gql_server"
     }
 }

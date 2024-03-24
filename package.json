@@ -14,6 +14,10 @@
     "server": "pnpm --filter server",
     "build:application": "pnpm database build",
     "build:database": "pnpm application build",
+    "start:application": "pnpm application start",
+    "start:dev:application": "pnpm application dev",
+    "start:database:logger": "pnpm database start:logger",
+    "start:database:server": "pnpm database start:server",
     "build": "pnpm build:application && pnpm build:database"
   }
 }

@@ -105,11 +105,10 @@ fn subscribe(cli: &Client, devices: &Devices) {
 }
 
 fn create_message(connection: &mut SqliteConnection, message: Message) {
-    let binding = message.payload_str();
-    let v: NewLogMessage = serde_json::from_str(&binding).unwrap();
+    let v: NewLogMessage = serde_json::from_str(&message.payload_str()).unwrap();
 
     let new_message = NewLogMessage {
-        friendly_name: Some(message.topic()),
+        friendly_name: Some(message.topic().to_string()),
         current: v.current,
         energy: v.energy,
         power: v.power,
@@ -126,7 +125,7 @@ fn create_message(connection: &mut SqliteConnection, message: Message) {
     };
 
     diesel::insert_into(logs::table)
-        .values(&new_message)
+        .values(new_message)
         .execute(connection)
         .expect("Error saving the message");
 }

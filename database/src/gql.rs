@@ -22,7 +22,7 @@ pub struct DevicesQuery;
 impl Query {
     fn logs(context: &GraphQLContext) -> FieldResult<Vec<LogMessage>> {
         let connection: &mut SqliteConnection = &mut context.pool.get().unwrap();
-        let res = logs.order(id.desc()).limit(50).load(connection);
+        let res = logs.order(id.asc()).limit(500).load(connection);
         handle_graphql_res(res)
     }
     fn devices() -> Vec<DeviceInfo> {

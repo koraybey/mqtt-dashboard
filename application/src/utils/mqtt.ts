@@ -66,7 +66,7 @@ export function useMqttSubscribe(topic: string) {
     const isConnected = useMqttStore((state) => state.isConnected)
     useEffect(() => {
         if (!isConnected) return
-        client.subscribe(topic)
+        client.subscribe(topic, { qos: 0 })
     }, [topic, isConnected])
 }
 
