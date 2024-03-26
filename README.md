@@ -1,5 +1,4 @@
-
-![Screenshot 2024-03-23 at 02-20-47 Dashboard](https://github.com/koraybey/mqtt-dashboard/assets/21336342/fbd849a9-c0c5-40ef-82ec-82fc135dd0a9)
+![Screenshot 2024-03-27 at 00-38-53 Dashboard](https://github.com/koraybey/mqtt-dashboard/assets/21336342/361a5092-243d-47b9-bd1a-07f754028507)
 
 ## Why
 
