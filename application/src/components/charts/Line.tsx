@@ -28,7 +28,7 @@ export const Line = ({ data }: { data: LogMessage[] }) => {
     const plugAlarm = filterByDeviceId(data, 'zigbee2mqtt/0_plug_studio')
     const plugCamera = filterByDeviceId(data, 'zigbee2mqtt/0_plug_camera')
     const measure = R.prop('linkquality')
-    const calcMaxDomain = ((max(data, measure) as unknown as number) || 0) * 1.1
+    const calcMaxDomain = (max(data, measure) as unknown as number) || 0
     const calcMinDomain = (min(data, measure) as unknown as number) || 0
 
     return (
@@ -79,7 +79,7 @@ export const Line = ({ data }: { data: LogMessage[] }) => {
                                 scale={yScale}
                                 hideZero
                                 hideTicks
-                                numTicks={5}
+                                numTicks={6}
                                 hideAxisLine
                                 tickLabelProps={axisLeftTickLabel}
                                 tickFormat={format('.5~g')}
@@ -93,7 +93,7 @@ export const Line = ({ data }: { data: LogMessage[] }) => {
                                 top={innerHeight}
                                 scale={xScale}
                                 hideZero
-                                numTicks={5}
+                                numTicks={6}
                                 tickLabelProps={axisBottomTickLabel}
                             />
                             {/* 
