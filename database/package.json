@@ -1,11 +1,10 @@
 {
-    "name": "database",
-    "version": "0.0.1",
-    "private": true,
-    "preinstall": "npx only-allow pnpm",
-    "scripts": {
-        "build": "cargo build --release",
-        "start:logger": "cargo run --release --bin mqtt_logger",
-        "start:server": "cargo run --release --bin gql_server"
-    }
+  "name": "database",
+  "version": "0.0.1",
+  "private": true,
+  "preinstall": "npx only-allow pnpm",
+  "scripts": {
+    "build": "cargo build --release",
+    "start": "cargo run --release"
+  }
 }

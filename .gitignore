@@ -7,6 +7,7 @@ target
 *.sqlite
 generated
 stats.html
+shared
 
 # Editor directories and files
 .vscode/*

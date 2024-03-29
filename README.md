@@ -39,21 +39,9 @@ asdf install
 ### Installing dependencies and building the project
 
 Check root and workspace ```package.json``` files to see available scripts.
+Make sure [mqtt-sqlite](https://github.com/koraybey/mqtt-sqlite) is running with a complete device configuration. Database package reads the configuration file and database created by that repository.
 
 ### Setting up the video stream
 
 Obtain the `.m3u8` URL for your stream and change the existing url in `@/components/Video`.
 
-### Creating database for MQTT logs
-
-Navigate to database directory and run
-
-```shell
-cargo install diesel_cli --no-default-features --features sqlite
-diesel migration run
-```
-
-before starting the other processes.
-
-> [!IMPORTANT]  
-> mqtt_logger.rs is scheduled for removal as logger uptime is critical and must run on the server where  the broker is located. For this reason, It will be removed from this project and will be published as systemd service.

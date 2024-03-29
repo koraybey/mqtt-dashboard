@@ -10,6 +10,8 @@ use juniper::{
 use std::fs;
 
 use crate::database::SqlitePool;
+use dotenv::dotenv;
+use std::env;
 
 pub struct GraphQLContext {
     pub pool: SqlitePool,
@@ -22,14 +24,17 @@ pub struct DevicesQuery;
 impl Query {
     fn logs(context: &GraphQLContext) -> FieldResult<Vec<LogMessage>> {
         let connection: &mut SqliteConnection = &mut context.pool.get().unwrap();
-        let res = logs.order(id.asc()).limit(500).load(connection);
+        let res = logs.order(id.asc()).offset(500).load(connection);
         handle_graphql_res(res)
     }
     fn devices() -> Vec<DeviceInfo> {
-        let path = "./devices.json";
-        let data = fs::read_to_string(path).expect("Unable to read file");
-        let res: Devices = serde_json::from_str(&data).expect("Unable to parse");
-        let all_devices: Vec<DeviceInfo> = res.devices;
+        dotenv().ok();
+        let config_url =
+            env::var("CONFIG_URL").expect("CONFIG_URL does not exist in .env");
+        let configuration = fs::read_to_string(config_url).expect("Unable to read file");
+        let configuration_devices: Devices =
+            serde_json::from_str(&configuration).expect("Unable to parse");
+        let all_devices: Vec<DeviceInfo> = configuration_devices.devices;
         return all_devices;
     }
 }

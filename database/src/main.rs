@@ -6,11 +6,11 @@ use actix_web::{
     web::{self, Data},
     App, Error, HttpResponse, HttpServer, Responder,
 };
-use juniper::http::{graphiql::graphiql_source, GraphQLRequest};
-use mqtt_sqlite::{
+use database::{
     database::{get_connection_pool, SqlitePool},
     gql::{create_schema, GraphQLContext, Schema},
 };
+use juniper::http::{graphiql::graphiql_source, GraphQLRequest};
 
 use actix_web_lab::respond::Html;
 
