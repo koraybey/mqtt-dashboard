@@ -31,8 +31,8 @@ You will need
 You may choose to use [asdf](https://asdf-vm.com/) and use pinned node and pnpm versions for straight-forward application runtime management. However, installing rust via rustup is recommended.
 
 ```shell
-asdf plugin add nodejs https://github.com/asdf-vm/asdf-nodejs.git
-asdf plugin add yarn https://github.com/twuni/asdf-yarn.git
+asdf plugin add nodejs
+asdf plugin-add pnpm
 asdf install
 ```
 
