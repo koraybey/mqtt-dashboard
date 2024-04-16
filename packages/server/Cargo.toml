@@ -1,7 +1,7 @@
 [package]
-name = "database"
+name = "mqtt-sqlite-server"
 version = "0.0.1"
-description = "Database and GraphQL packages of mqtt-dashboard."
+description = "GraphQL server package of mqtt-dashboard."
 edition = "2021"
 license = "MIT"
 
@@ -9,7 +9,6 @@ license = "MIT"
 actix-web = "4.5.1"
 actix-web-lab = "0.20.0"
 actix-cors = "0.6.5"
-paho-mqtt = { version = "0.12.3", features = ["vendored-ssl"] }
 diesel = { version = "2.1.5", features = [
     "sqlite",
     "r2d2",

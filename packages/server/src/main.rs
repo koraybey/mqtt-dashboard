@@ -6,13 +6,13 @@ use actix_web::{
     web::{self, Data},
     App, Error, HttpResponse, HttpServer, Responder,
 };
-use database::{
-    database::{get_connection_pool, SqlitePool},
-    gql::{create_schema, GraphQLContext, Schema},
-};
 use juniper::http::{graphiql::graphiql_source, GraphQLRequest};
 
 use actix_web_lab::respond::Html;
+use mqtt_sqlite_server::{
+    database::{get_connection_pool, SqlitePool},
+    gql::{create_schema, GraphQLContext, Schema},
+};
 
 #[get("/graphiql")]
 async fn graphql_playground() -> impl Responder {
@@ -49,7 +49,7 @@ async fn main() -> std::io::Result<()> {
             .wrap(Cors::permissive())
             .wrap(middleware::Logger::default())
     })
-    .bind(("127.0.0.1", 4000))?
+    .bind(("0.0.0.0", 4000))?
     .workers(2)
     .run()
     .await
