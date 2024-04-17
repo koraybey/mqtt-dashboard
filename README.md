@@ -38,10 +38,20 @@ asdf install
 
 ### Installing dependencies and building the project
 
-Check root and workspace ```package.json``` files to see available scripts.
+#### Logging MQTT messages
+
+Check root and workspace `package.json` files to see available scripts.
 Make sure [mqtt-sqlite](https://github.com/koraybey/mqtt-sqlite) is running with a complete device configuration. Database package reads the configuration file and database created by that repository.
 
-### Setting up the video stream
+#### Running the GraphQL server
+
+Once `mqtt-sqlite` is running and logging MQTT messages, clone this repository where `mqtt-sqlite` resides. Head over to the `server` package and build a docker image, then run the image by mounting the `shared` directory where `configuration.json` and `database.sqlite` are located. These files will be created when `mqtt-sqlite` is setup and shared with the `server` package.
+
+```shell
+docker build -t mqtt-sqlite-server .
+docker run -dti -v /home/koraybey/mqtt-sqlite/shared:/data/shared -p 4000:4000  -e DATABASE_URL=shared/database.sqlite -e CONFIG_URL=shared/configuration.json mqtt-sqlite-server
+```
+
+#### Setting up the video stream
 
 Obtain the `.m3u8` URL for your stream and change the existing url in `@/components/Video`.
-

@@ -10,13 +10,10 @@
   "scripts": {
     "prepare": "husky",
     "application": "pnpm --filter application",
-    "database": "pnpm --filter database",
     "server": "pnpm --filter server",
-    "build:application": "pnpm database build",
-    "build:database": "pnpm application build",
+    "start:server": "pnpm server start",
     "start:application": "pnpm application start",
     "start:dev:application": "pnpm application dev",
-    "start:graphql": "pnpm database start:logger",
     "build": "pnpm build:application && pnpm build:database"
   }
 }

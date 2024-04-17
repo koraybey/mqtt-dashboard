@@ -4,7 +4,7 @@ import * as R from 'ramda'
 
 export const fetcher = (query: string) =>
     axios({
-        url: 'http://127.0.0.1:4000/graphql',
+        url: 'http://10.147.17.93:4000/graphql',
         method: 'post',
         headers: { 'Content-type': 'application/json' },
         data: { query },

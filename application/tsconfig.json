@@ -24,6 +24,7 @@
         "noUnusedParameters": true,
         "noFallthroughCasesInSwitch": true
     },
-    "include": ["src", "vite.config.ts", "codegen.ts"],
+    "include": ["src", "**/*.ts"],
+    "exclude": ["**/generated/**/*.ts"],
     "references": [{ "path": "./tsconfig.node.json" }]
 }

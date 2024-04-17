@@ -24,7 +24,7 @@ pub struct DevicesQuery;
 impl Query {
     fn logs(context: &GraphQLContext) -> FieldResult<Vec<LogMessage>> {
         let connection: &mut SqliteConnection = &mut context.pool.get().unwrap();
-        let res = logs.order(id.asc()).offset(500).load(connection);
+        let res = logs.order(timestamp.desc()).limit(500).load(connection);
         handle_graphql_res(res)
     }
     fn devices() -> Vec<DeviceInfo> {
