@@ -10,10 +10,12 @@
   "scripts": {
     "prepare": "husky",
     "application": "pnpm --filter application",
-    "server": "pnpm --filter server",
-    "start:server": "pnpm server start",
+    "mqtt-sqlite-server": "pnpm --filter mqtt-sqlite-server",
+    "build:application": "pnpm application build",
+    "build:server": "pnpm mqtt-sqlite-server build",
+    "start:server": "pnpm mqtt-sqlite-server start",
     "start:application": "pnpm application start",
     "start:dev:application": "pnpm application dev",
-    "build": "pnpm build:application && pnpm build:database"
+    "build": "pnpm build:application && pnpm build:server"
   }
 }

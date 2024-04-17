@@ -1,5 +1,5 @@
 {
-  "name": "server",
+  "name": "mqtt-sqlite-server",
   "version": "0.0.1",
   "private": true,
   "preinstall": "npx only-allow pnpm",

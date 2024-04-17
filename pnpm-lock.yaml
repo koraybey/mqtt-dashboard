@@ -244,8 +244,6 @@ importers:
         specifier: ^5.1.4
         version: 5.2.2(@types/node@20.11.27)
 
-  server: {}
-
 packages:
 
   /@aashutoshrathi/word-wrap@1.2.6:
