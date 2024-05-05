@@ -9,7 +9,7 @@
         "build": "tsc && vite build",
         "preview": "vite preview",
         "start": "NODE_ENV=production node app.js",
-        "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+        "lint": "eslint .",
         "codegen": "graphql-codegen --config codegen.ts"
     },
     "dependencies": {

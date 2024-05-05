@@ -64,7 +64,7 @@ export const Dashboard = () => {
                     }
                 />
             </Card>
-            <Card className={'h-[400px] p-4'}>
+            <Card className={'h-[400px] p-4 overflow-scroll'}>
                 <MqttLogs />
             </Card>
             <div className={'h-[400px] grid gap-2 grid-cols-4'}>

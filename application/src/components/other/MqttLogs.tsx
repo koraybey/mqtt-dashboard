@@ -12,6 +12,7 @@ import type { LogMessage } from '@/generated/gql/graphql'
 import { fetcher } from '@/utils/api'
 
 import { isoToHumanReadable } from '../charts/helpers'
+import { LoadingSpinner } from '../ui/loading-spinner'
 
 export const MqttLogs = () => {
     const { data, isLoading } = useSWR<{ logs: LogMessage[] }>(
@@ -36,8 +37,13 @@ export const MqttLogs = () => {
           }`,
         fetcher
     )
-
-    if (isLoading || !data) return null
+    if (isLoading)
+        return (
+            <div className={'flex items-center justify-center w-full h-full'}>
+                <LoadingSpinner />
+            </div>
+        )
+    if (!data) return null
 
     return R.prop('logs', data)
         .slice(0, 20)
@@ -73,7 +79,6 @@ export const MqttLogsMessage = memo(({ data }: { data: LogMessage }) => (
                 lineHeight: 1.8,
                 padding: 0,
                 backgroundColor: 'transparent',
-                overflow: 'hidden',
             }}
         >
             {JSON.stringify(data, null, 0)}

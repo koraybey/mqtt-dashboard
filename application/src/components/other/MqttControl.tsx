@@ -83,8 +83,7 @@ export const MqttControl = ({
 
     return (
         <Card className={'h-48'}>
-            <animated.button
-                onClick={handleClick}
+            <animated.div
                 className={
                     'flex flex-col justify-between content-start p-4 w-full h-full focus-visible:outline-none'
                 }
@@ -97,7 +96,10 @@ export const MqttControl = ({
                 </h3>
                 <div className={'flex w-full justify-between items-center'}>
                     {type === 'switch' || type === 'plug' ? (
-                        <Switch checked={deviceStatus as boolean} />
+                        <Switch
+                            onClick={handleClick}
+                            checked={deviceStatus as boolean}
+                        />
                     ) : null}
                     <Icon
                         size={32}
@@ -108,7 +110,7 @@ export const MqttControl = ({
                         name={icon}
                     />
                 </div>
-            </animated.button>
+            </animated.div>
         </Card>
     )
 }

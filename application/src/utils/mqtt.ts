@@ -16,7 +16,7 @@ client.onConnectionLost = onConnectionLost
 client.onMessageArrived = onHandleMessage
 
 type MqttStore = {
-    isConnected: boolean
+    isConnected: boolean | undefined
     deviceStatus: { [key: string]: string }[]
     updateDeviceStatus: (topic: string, status: boolean | undefined) => void
 }
@@ -26,7 +26,7 @@ export const useMqttStore = create<MqttStore>()(
         persist(
             (set) => ({
                 logs: [],
-                isConnected: false,
+                isConnected: undefined,
                 deviceStatus: [],
                 updateDeviceStatus: (topic, status) =>
                     set((state) => ({
