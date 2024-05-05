@@ -4,7 +4,8 @@ import * as R from 'ramda'
 
 export const fetcher = (query: string) =>
     axios({
-        url: 'http://10.147.17.93:4000/graphql',
+        // url: 'http://10.147.17.93:4000/graphql',
+        url: 'http://localhost:4000/graphql',
         method: 'post',
         headers: { 'Content-type': 'application/json' },
         data: { query },
@@ -13,5 +14,5 @@ export const fetcher = (query: string) =>
             return R.prop('data', res.data)
         })
         .catch((error) => {
-            throw new TypeError(`Things exploded: ${error}`)
+            return new TypeError(`Things exploded: ${error}`)
         })

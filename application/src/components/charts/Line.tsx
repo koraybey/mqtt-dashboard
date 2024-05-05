@@ -22,12 +22,8 @@ import type { SharedChartProperties } from '@/types/components'
 import { filterByDeviceId } from './helpers'
 
 export const Line = ({ data }: { data: LogMessage[] }) => {
-    //! TODO Replace hard-coded values and map deviceNames dynamically
-    //! TODO Refactor redundant calculations and reuse funcs to process data. What is happening below is expensive. However necessary as the server API for the demo is pretty basic.
-    const motion = filterByDeviceId(data, 'zigbee2mqtt/0_light_studio')
-    const plugAlarm = filterByDeviceId(data, 'zigbee2mqtt/0_plug_studio')
-    const plugCamera = filterByDeviceId(data, 'zigbee2mqtt/0_plug_camera')
     const measure = R.prop('linkquality')
+
     const calcMaxDomain = (max(data, measure) as unknown as number) || 0
     const calcMinDomain = (min(data, measure) as unknown as number) || 0
 
@@ -96,12 +92,34 @@ export const Line = ({ data }: { data: LogMessage[] }) => {
                                 numTicks={6}
                                 tickLabelProps={axisBottomTickLabel}
                             />
-                            {/* 
-                            //! TODO Map
-                            */}
                             <LinePath
                                 curve={curveBasis}
-                                data={plugCamera}
+                                data={filterByDeviceId(
+                                    data,
+                                    'zigbee2mqtt/0_motion_salotto'
+                                )}
+                                x={getX}
+                                y={getY}
+                                strokeWidth={1.5}
+                                stroke={colors.purple[1]}
+                            />
+                            <LinePath
+                                curve={curveBasis}
+                                data={filterByDeviceId(
+                                    data,
+                                    'zigbee2mqtt/0_light_studio'
+                                )}
+                                x={getX}
+                                y={getY}
+                                strokeWidth={1.5}
+                                stroke={colors.green[1]}
+                            />
+                            <LinePath
+                                curve={curveBasis}
+                                data={filterByDeviceId(
+                                    data,
+                                    'zigbee2mqtt/0_plug_studio'
+                                )}
                                 x={getX}
                                 y={getY}
                                 strokeWidth={1.5}
@@ -109,7 +127,10 @@ export const Line = ({ data }: { data: LogMessage[] }) => {
                             />
                             <LinePath
                                 curve={curveBasis}
-                                data={motion}
+                                data={filterByDeviceId(
+                                    data,
+                                    'zigbee2mqtt/0_plug_camera'
+                                )}
                                 x={getX}
                                 y={getY}
                                 strokeWidth={1.5}
@@ -117,11 +138,14 @@ export const Line = ({ data }: { data: LogMessage[] }) => {
                             />
                             <LinePath
                                 curve={curveBasis}
-                                data={plugAlarm}
+                                data={filterByDeviceId(
+                                    data,
+                                    'zigbee2mqtt/0_plug_alarm"'
+                                )}
                                 x={getX}
                                 y={getY}
                                 strokeWidth={1.5}
-                                stroke={colors.purple[1]}
+                                stroke={colors.red[1]}
                             />
                         </Group>
                     </svg>

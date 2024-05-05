@@ -12,9 +12,6 @@ const client = new Paho.Client(
     `mqttjs_${Math.random().toString(16).slice(2, 10)}`
 )
 
-client.onConnectionLost = onConnectionLost
-client.onMessageArrived = onHandleMessage
-
 type MqttStore = {
     isConnected: boolean | undefined
     deviceStatus: { [key: string]: string }[]
@@ -56,13 +53,13 @@ client.connect({
         useMqttStore.setState({ isConnected: true })
     },
     onFailure: () => {
-        throw new Error('Cannot connect to MQTT Broker.')
+        return new Error('Cannot connect to MQTT Broker.')
     },
     keepAliveInterval: 30,
     reconnect: true,
 })
 
-export function useMqttSubscribe(topic: string) {
+export const useMqttSubscribe = (topic: string) => {
     const isConnected = useMqttStore((state) => state.isConnected)
     useEffect(() => {
         if (!isConnected) return
@@ -70,7 +67,7 @@ export function useMqttSubscribe(topic: string) {
     }, [topic, isConnected])
 }
 
-export function mqttPublish(topic: string, payload: string) {
+export const mqttPublish = (topic: string, payload: string) => {
     const message = new Paho.Message(payload)
     message.destinationName = topic
     client.send(message)
@@ -94,7 +91,7 @@ const determineState = (parsedMessage: ParsedMessage, topic: string) => {
     }
 }
 
-function onHandleMessage(message: Message) {
+const onHandleMessage = (message: Message) => {
     const parsedMessage = JSON.parse(message.payloadString) as ParsedMessage
     useMqttStore
         .getState()
@@ -104,8 +101,11 @@ function onHandleMessage(message: Message) {
         )
 }
 
-function onConnectionLost(responseObject: MQTTError) {
+const onConnectionLost = (responseObject: MQTTError) => {
     if (responseObject.errorCode !== 0) {
-        throw new Error('Lost MQTT connection')
+        return new Error('Lost MQTT connection')
     }
 }
+
+client.onConnectionLost = onConnectionLost
+client.onMessageArrived = onHandleMessage

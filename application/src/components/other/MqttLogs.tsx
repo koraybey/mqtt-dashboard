@@ -6,47 +6,21 @@ SyntaxHighlighter.registerLanguage('json', json)
 
 import * as R from 'ramda'
 import { memo } from 'react'
-import useSWR from 'swr'
 
 import type { LogMessage } from '@/generated/gql/graphql'
-import { fetcher } from '@/utils/api'
 
 import { isoToHumanReadable } from '../charts/helpers'
-import { LoadingSpinner } from '../ui/loading-spinner'
 
-export const MqttLogs = () => {
-    const { data, isLoading } = useSWR<{ logs: LogMessage[] }>(
-        `{
-            logs {
-              friendlyName
-              current
-              energy
-              power
-              lastSeen
-              voltage
-              linkquality
-              state
-              contact
-              occupancy
-              battery
-              illuminance
-              deviceTemperature
-              powerOutageCount
-              timestamp
-            }
-          }`,
-        fetcher
-    )
-    if (isLoading)
-        return (
-            <div className={'flex items-center justify-center w-full h-full'}>
-                <LoadingSpinner />
-            </div>
-        )
-    if (!data) return null
-
+export const MqttLogs = ({
+    data,
+}: {
+    data: {
+        logs: LogMessage[]
+    }
+}) => {
+    if (!data) return
     return R.prop('logs', data)
-        .slice(0, 20)
+        .slice(0, 50)
         .map((log, index) => <MqttLogsMessage data={log} key={index} />)
 }
 
@@ -81,7 +55,7 @@ export const MqttLogsMessage = memo(({ data }: { data: LogMessage }) => (
                 backgroundColor: 'transparent',
             }}
         >
-            {JSON.stringify(data, null, 0)}
+            {JSON.stringify(data, undefined, 0)}
         </SyntaxHighlighter>
     </div>
 ))

@@ -8,6 +8,7 @@ import { Switch } from '@/components/ui/switch'
 import { mqttPublish, useMqttStore, useMqttSubscribe } from '@/utils/mqtt'
 
 import { Card } from '../ui/card'
+import { LoadingSpinner } from '../ui/loading-spinner'
 
 const deviceColors: { [key: string]: { on: string; off: string } } = {
     sensor: {
@@ -63,6 +64,7 @@ export const MqttControl = ({
     const deviceStatus = useMqttStore((state) =>
         R.path([topic, 'status'])(state.deviceStatus)
     )
+    const isConnected = useMqttStore((state) => state.isConnected)
     const handleClick = useCallback(() => {
         if (type === 'sensor' || type === 'contact') return
         const payload = { state: deviceStatus ? 'OFF' : 'ON' }
@@ -83,34 +85,46 @@ export const MqttControl = ({
 
     return (
         <Card className={'h-48'}>
-            <animated.div
-                className={
-                    'flex flex-col justify-between content-start p-4 w-full h-full focus-visible:outline-none'
-                }
-                style={{
-                    backgroundColor: background.bg,
-                }}
-            >
-                <h3 className={'text-xl font-semibold tracking-wide text-left'}>
-                    {name}
-                </h3>
-                <div className={'flex w-full justify-between items-center'}>
-                    {type === 'switch' || type === 'plug' ? (
-                        <Switch
-                            onClick={handleClick}
-                            checked={deviceStatus as boolean}
+            {isConnected ? (
+                <animated.div
+                    className={
+                        'flex flex-col justify-between content-start p-4 w-full h-full focus-visible:outline-none'
+                    }
+                    style={{
+                        backgroundColor: background.bg,
+                    }}
+                >
+                    <h3
+                        className={
+                            'text-xl font-semibold tracking-wide text-left'
+                        }
+                    >
+                        {name}
+                    </h3>
+                    <div className={'flex w-full justify-between items-center'}>
+                        {type === 'switch' || type === 'plug' ? (
+                            <Switch
+                                onClick={handleClick}
+                                checked={deviceStatus as boolean}
+                            />
+                        ) : undefined}
+                        <Icon
+                            size={32}
+                            className={`ml-auto ${
+                                deviceStatus ? 'text-white' : 'text-zinc-700'
+                            }`}
+                            strokeWidth={1}
+                            name={icon}
                         />
-                    ) : null}
-                    <Icon
-                        size={32}
-                        className={`ml-auto ${
-                            deviceStatus ? 'text-white' : 'text-zinc-700'
-                        }`}
-                        strokeWidth={1}
-                        name={icon}
-                    />
+                    </div>
+                </animated.div>
+            ) : (
+                <div
+                    className={'flex items-center justify-center w-full h-full'}
+                >
+                    <LoadingSpinner />
                 </div>
-            </animated.div>
+            )}
         </Card>
     )
 }
