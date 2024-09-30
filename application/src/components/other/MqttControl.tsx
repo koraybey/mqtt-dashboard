@@ -1,7 +1,7 @@
 import { animated, useSpring } from '@react-spring/web'
 import type dynamicIconImports from 'lucide-react/dynamicIconImports'
 import * as R from 'ramda'
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 import { Icon } from '@/components/ui/icon'
 import { Switch } from '@/components/ui/switch'
@@ -65,6 +65,8 @@ export const MqttControl = ({
         R.path([topic, 'status'])(state.deviceStatus)
     )
     const isConnected = useMqttStore((state) => state.isConnected)
+    const [showLoading, setShowLoading] = useState(false)
+
     const handleClick = useCallback(() => {
         if (type === 'sensor' || type === 'contact') return
         const payload = { state: deviceStatus ? 'OFF' : 'ON' }
@@ -82,6 +84,25 @@ export const MqttControl = ({
             bg: deviceStatus ? deviceColors[type].on : deviceColors[type].off,
         })
     }, [api, deviceStatus, topic, type])
+
+    useEffect(() => {
+        const delayInMs = 2000
+        const timer: NodeJS.Timeout | undefined = isConnected
+            ? undefined
+            : setTimeout(() => setShowLoading(true), delayInMs)
+
+        if (isConnected) {
+            setShowLoading(false)
+            return
+        }
+
+        return () => {
+            if (timer) {
+                clearTimeout(timer)
+                return
+            }
+        }
+    }, [isConnected])
 
     return (
         <Card className={'h-48'}>
@@ -118,13 +139,13 @@ export const MqttControl = ({
                         />
                     </div>
                 </animated.div>
-            ) : (
+            ) : showLoading ? (
                 <div
                     className={'flex items-center justify-center w-full h-full'}
                 >
                     <LoadingSpinner />
                 </div>
-            )}
+            ) : undefined}
         </Card>
     )
 }
