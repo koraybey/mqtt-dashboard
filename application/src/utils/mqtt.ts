@@ -6,9 +6,17 @@ import { createJSONStorage, devtools, persist } from 'zustand/middleware'
 
 import type { ParsedMessage } from '@/types/exposes'
 
+const mqttBrokerURL = import.meta.env.VITE_MQTT_BROKER_URL
+const mqttBrokerPort = import.meta.env.VITE_MQTT_BROKER_PORT
+
+if (!mqttBrokerURL || !mqttBrokerPort) {
+    // eslint-disable-next-line functional/no-throw-statements
+    throw new Error('MQTT_BROKER_URL and MQTT_PORT must be set')
+}
+
 const client = new Paho.Client(
-    '10.147.17.93',
-    Number(1881),
+    mqttBrokerURL,
+    Number(mqttBrokerPort),
     `mqttjs_${Math.random().toString(16).slice(2, 10)}`
 )
 

@@ -26,3 +26,6 @@ logs
 log.txt
 yarn-debug.log*
 yarn-error.log*
+
+# Env
+.env*
